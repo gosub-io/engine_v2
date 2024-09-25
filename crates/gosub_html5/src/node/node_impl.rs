@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use gosub_shared::node_id::NodeId;
+use std::collections::HashMap;
 
 #[derive(Debug, Clone)]
 pub struct ElementAttribute {
@@ -20,7 +20,7 @@ pub struct ElementData {
     name: String,
     namespace: String,
     attributes: Vec<ElementAttribute>,
-    classes: HashMap<String, bool>,     // classname -> is active or not
+    classes: HashMap<String, bool>, // classname -> is active or not
 }
 
 impl ElementData {
@@ -37,7 +37,10 @@ impl ElementData {
     }
 
     pub fn add_attribute(&mut self, name: &str, value: &str) {
-        self.attributes.push(ElementAttribute { name: name.into(), value: value.into() });
+        self.attributes.push(ElementAttribute {
+            name: name.into(),
+            value: value.into(),
+        });
 
         // @todo: do things with "class" and "id"
         if name == "class" {
@@ -56,7 +59,11 @@ impl ElementData {
     }
 
     pub fn active_classes(&self) -> Vec<String> {
-        self.classes.iter().filter(|(_, &active)| active).map(|(name,_)| name.to_string()).collect()
+        self.classes
+            .iter()
+            .filter(|(_, &active)| active)
+            .map(|(name, _)| name.to_string())
+            .collect()
     }
 
     pub fn add_class(&mut self, name: String, active: bool) {
@@ -173,7 +180,9 @@ impl Node {
     }
 
     pub fn new_doctype_node(name: String, public_id: String, system_id: String) -> Self {
-        Self::new(NodeData::DocType(DocTypeData::new(name, public_id, system_id)))
+        Self::new(NodeData::DocType(DocTypeData::new(
+            name, public_id, system_id,
+        )))
     }
 
     pub fn nodetype(&self) -> NodeType {

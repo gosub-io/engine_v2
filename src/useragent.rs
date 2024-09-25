@@ -5,26 +5,46 @@ use gosub_renderer::backend::MyRenderBackend;
 use gosub_renderer::layouter::MyLayouter;
 use gosub_renderer::render_tree::MyRenderTree;
 use gosub_renderer::tree_drawer::MyTreeDrawer;
-use gosub_shared::traits::css_system::CssSystem;
-use gosub_shared::traits::document::Document;
-use gosub_shared::traits::html5_parser::HtmlParser;
-use gosub_shared::traits::layouter::Layouter;
+use gosub_shared::traits::css_system::{CssSystem, HasCssSystem};
+use gosub_shared::traits::document::{Document, HasDocument};
+use gosub_shared::traits::html5_parser::{HasHtmlParser, HtmlParser};
+use gosub_shared::traits::layouter::{HasLayouter, Layouter};
 use gosub_shared::traits::module_conf::ModuleConfiguration;
-use gosub_shared::traits::render_backend::RenderBackend;
-use gosub_shared::traits::render_tree::RenderTree;
-use gosub_shared::traits::tree_drawer::TreeDrawer;
+use gosub_shared::traits::render_backend::{HasRenderBackend, RenderBackend};
+use gosub_shared::traits::render_tree::{HasRenderTree, RenderTree};
+use gosub_shared::traits::tree_drawer::{HasTreeDrawer, TreeDrawer};
 
 struct MyModuleConfiguration;
 
-impl ModuleConfiguration for MyModuleConfiguration {
+impl HasCssSystem for MyModuleConfiguration {
     type CssSystem = MyCssSystem;
-    type Document = MyDocument;
-    type HtmlParser = MyHtmlParser;
-    type Layouter = MyLayouter;
-    type TreeDrawer = MyTreeDrawer;
-    type RenderTree = MyRenderTree;
+}
+
+impl HasDocument for MyModuleConfiguration {
+    type Document = MyDocument<Self>;
+}
+
+impl HasHtmlParser for MyModuleConfiguration {
+    type HtmlParser = MyHtmlParser<Self>;
+}
+
+impl HasLayouter for MyModuleConfiguration {
+    type Layouter = MyLayouter<Self>;
+}
+
+impl HasRenderTree for MyModuleConfiguration {
+    type RenderTree = MyRenderTree<Self>;
+}
+
+impl HasTreeDrawer for MyModuleConfiguration {
+    type TreeDrawer = MyTreeDrawer<Self>;
+}
+
+impl HasRenderBackend for MyModuleConfiguration {
     type RenderBackend = MyRenderBackend;
 }
+
+impl ModuleConfiguration for MyModuleConfiguration {}
 
 fn main() {
     main_do_things::<MyModuleConfiguration>();
@@ -44,6 +64,6 @@ fn main_do_things<C: ModuleConfiguration>() {
     html_parser.do_html_parser_things();
     layouter.do_layouter_things();
     tree_drawer.do_tree_drawer_things();
-    render_tree.do_render_tree_things();
+    render_tree.do_render_tree_things(&document);
     backend.do_render_backend_things();
 }

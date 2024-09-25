@@ -1,4 +1,4 @@
-use gosub_shared::traits::css_system::CssSystem;
+use gosub_shared::traits::css_system::{CssSystem, HasCssSystem};
 
 pub struct MyCssSystem;
 
@@ -10,4 +10,8 @@ impl CssSystem for MyCssSystem {
     fn new() -> Self {
         Self
     }
+}
+
+impl HasCssSystem for MyCssSystem {
+    type CssSystem = MyCssSystem;
 }

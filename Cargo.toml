@@ -19,6 +19,10 @@ members = [
 name = "gosub-user-agent"
 path = "src/useragent.rs"
 
+[[bin]]
+name = "gosub-text-user-agent"
+path = "src/text-useragent.rs"
+
 [dependencies]
 gosub_shared = { path = "./crates/gosub_shared", features = [] }
 gosub_html5 = { path = "./crates/gosub_html5", features = [] }

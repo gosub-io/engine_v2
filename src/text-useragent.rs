@@ -44,6 +44,6 @@ fn main_do_things<C: ModuleConfiguration>() {
     html_parser.do_html_parser_things();
     layouter.do_layouter_things();
     tree_drawer.do_tree_drawer_things();
-    render_tree.do_render_tree_things();
+    render_tree.do_render_tree_things(&document);
     backend.do_render_backend_things();
 }

@@ -20,7 +20,7 @@ impl<HL: HasLayouter> HasRenderTree for HL {
 }
 
 pub trait RenderTree<C: HasDocument>: Sized {
-    fn do_render_tree_things(&self);
+    fn do_render_tree_things(&self, doc: &<C as HasDocument>::Document);
 
     fn new() -> Self;
 }

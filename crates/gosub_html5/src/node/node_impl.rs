@@ -8,7 +8,7 @@ pub struct ElementAttribute {
 }
 
 #[derive(Debug, Clone)]
-enum NodeType {
+pub enum NodeType {
     Element,
     Text,
     Comment,
@@ -121,7 +121,7 @@ impl DocTypeData {
 }
 
 #[derive(Debug, Clone)]
-enum NodeData {
+pub enum NodeData {
     Element(ElementData),
     Text(TextData),
     Comment(CommentData),
@@ -129,7 +129,7 @@ enum NodeData {
 }
 
 #[derive(Debug, Clone)]
-struct Node {
+pub struct Node {
     pub id: Option<NodeId>,
 
     pub children: Vec<NodeId>,

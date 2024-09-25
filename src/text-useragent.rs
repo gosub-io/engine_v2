@@ -21,11 +21,11 @@ impl HasCssSystem for MyModuleConfiguration {
 }
 
 impl HasDocument for MyModuleConfiguration {
-    type Document = MyDocument<Self>;
+    type Document = MyDocument<Self::CssSystem>;
 }
 
 impl HasHtmlParser for MyModuleConfiguration {
-    type HtmlParser = MyHtmlParser<Self>;
+    type HtmlParser = MyHtmlParser<Self::Document>;
 }
 
 impl HasLayouter for MyModuleConfiguration {
@@ -61,6 +61,10 @@ fn main_do_things<C: ModuleConfiguration>() {
 
     css_system.do_css_things();
     document.do_document_things();
+    
+    
+    document.uses_css_system(&css_system);
+    
     html_parser.do_html_parser_things();
     layouter.do_layouter_things();
     tree_drawer.do_tree_drawer_things();

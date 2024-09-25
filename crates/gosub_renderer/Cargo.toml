@@ -1,0 +1,15 @@
+[package]
+name = "gosub_renderer"
+version = "0.1.0"
+edition = "2021"
+authors = ["Gosub Community <info@gosub.io>"]
+license = "MIT"
+
+[dependencies]
+gosub_html5 = { path = "../gosub_html5" }
+gosub_shared = { path = "../gosub_shared" }
+gosub_css3 = { path = "../gosub_css3" }
+anyhow = "1.0.87"
+image = "0.25.2"
+url = "2.5.2"
+log = "0.4.22"

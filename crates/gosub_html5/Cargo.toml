@@ -1,0 +1,16 @@
+[package]
+name = "gosub_html5"
+version = "0.1.0"
+edition = "2021"
+authors = ["Gosub Community <info@gosub.io>"]
+license = "MIT"
+
+[dependencies]
+gosub_shared = { path = "../gosub_shared", features = [] }
+gosub_css3 = { path = "../gosub_css3", features = [] }
+derive_more = { version = "1", features = ["from"] }
+phf = { version = "0.11.2", features = ["macros"] }
+lazy_static = "1.5"
+thiserror = "1.0.61"
+url = { version = "2.5.2", features = [] }
+log = { version = "0.4.22", features = [] }

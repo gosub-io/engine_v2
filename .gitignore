@@ -1,0 +1,6 @@
+#
+# Please do not add IDE specific files to this file. You should use your own .gitignore file for that.
+#
+
+# Binary output directory
+target/

@@ -1,0 +1,30 @@
+[package]
+name = "gosub_engine_v2"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.79"
+authors = ["Gosub Community <info@gosub.io>"]
+description = "An HTML5 browser engine written in Rust."
+license = "MIT"
+repository = "https://github.com/gosub-browser/gosub-engine"
+readme = "README.md"
+keywords = ["html5", "parser", "browser", "Rust", "DOM"]
+
+[workspace]
+members = [
+    "crates/*"
+]
+
+[[bin]]
+name = "gosub-user-agent"
+path = "src/main.rs"
+
+[dependencies]
+gosub_shared = { path = "./crates/gosub_shared", features = [] }
+gosub_html5 = { path = "./crates/gosub_html5", features = [] }
+gosub_css3 = { path = "./crates/gosub_css3", features = [] }
+gosub_renderer = { path = "./crates/gosub_renderer", features = [] }
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+test-case = "3.3.1"

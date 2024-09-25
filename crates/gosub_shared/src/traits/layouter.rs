@@ -3,7 +3,7 @@ use crate::traits::document::Document;
 use crate::traits::render_tree::{HasRenderTree, RenderTree};
 
 pub trait HasLayouter: Sized {
-    type Document: Document<Self>;
+    type Document: Document;
     type CssSystem: CssSystem;
     type RenderTree: RenderTree<Self>;
     type Layouter: Layouter<Self>;

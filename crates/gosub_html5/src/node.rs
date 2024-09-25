@@ -1,2 +1,3 @@
 pub mod node_impl;
-mod arena;
+pub mod arena;
+pub mod builder;

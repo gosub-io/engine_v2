@@ -1,6 +1,8 @@
 pub mod module_conf;
 
 pub mod document;
+pub mod node;
+
 pub mod html5_parser;
 pub mod css_system;
 

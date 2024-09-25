@@ -1,14 +1,54 @@
+use gosub_shared::document::DocumentHandle;
+use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::document::HasDocument;
+use gosub_shared::traits::document::Document;
 use gosub_shared::traits::html5_parser::HtmlParser;
+use gosub_shared::traits::node::HasNode;
+use crate::node::builder::NodeBuilder;
 
-pub struct MyHtmlParser;
+pub struct MyHtmlParser<C: HasDocument> {
+    doc_handle: DocumentHandle<C>,
+    parser_state: u32,  // dummy parser state
+}
 
-impl<C: HasDocument> HtmlParser<C> for MyHtmlParser {
-    fn do_html_parser_things(&self) {
-        println!("Doing HTML parser things");
+impl<C: HasDocument + HasNode> HtmlParser<C> for MyHtmlParser<C> {
+    fn new(doc_handle: DocumentHandle<C>) -> Self {
+        Self {
+            doc_handle: doc_handle.clone(),
+            parser_state: 0,
+        }
     }
 
-    fn new() -> Self {
-        Self
+    fn parse_str(&mut self, input: &str) {
+        println!("Parsing string: {}", input);
+        self.parser_state = 1;
+
+        /*
+            We generate some dummy nodes here to mimic actual parsing. Generates the following tree:
+
+            <html>
+                <head></head>
+                <body>
+                    <p>hello world!</p>
+                </body>
+            </html>
+         */
+
+        let mut binding = self.doc_handle.get_mut();
+
+        let node1 = NodeBuilder::<C>::new_element_node("html", "html");
+        let node1_id = binding.register_node_at(node1, NodeId::root(), None);
+
+        let node2 = NodeBuilder::<C>::new_element_node("head", "html");
+        let _node2_id = binding.register_node_at(node2, node1_id, None);
+
+        let node3 = NodeBuilder::<C>::new_element_node("body", "html");
+        let node3_id = binding.register_node_at(node3, node1_id, None);
+
+        let node4 = NodeBuilder::<C>::new_element_node("p", "html");
+        let node4_id = binding.register_node_at(node4, node3_id, None);
+
+        let node5 = NodeBuilder::<C>::new_text_node("hello world!");
+        let _node5_id = binding.register_node_at(node5, node4_id, None);
     }
 }

@@ -2,11 +2,13 @@ use crate::traits::css_system::CssSystem;
 use crate::traits::document::Document;
 use crate::traits::html5_parser::{HasHtmlParser, HtmlParser};
 use crate::traits::layouter::Layouter;
+use crate::traits::node::Node;
 use crate::traits::render_backend::RenderBackend;
 use crate::traits::render_tree::RenderTree;
 use crate::traits::tree_drawer::{HasTreeDrawer, TreeDrawer};
 
 pub trait ModuleConfiguration: Sized {
+    type Node: Node;
     type CssSystem: CssSystem;
     type Document: Document<Self>;
     type HtmlParser: HtmlParser<Self>;
@@ -39,6 +41,7 @@ impl<C: ModuleConfiguration> HasHtmlParser<C> for C {
 // }
 
 impl<C: ModuleConfiguration> HasTreeDrawer for C {
+    
     type Document = <Self as ModuleConfiguration>::Document;
     type CssSystem = <Self as ModuleConfiguration>::CssSystem;
     type RenderTree = <Self as ModuleConfiguration>::RenderTree;

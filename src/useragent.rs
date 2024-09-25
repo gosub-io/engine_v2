@@ -1,5 +1,5 @@
 use gosub_css3::MyCssSystem;
-use gosub_html5::document::MyDocument;
+use gosub_html5::document::document::MyDocument;
 use gosub_html5::html5parser::MyHtmlParser;
 use gosub_renderer::backend::MyRenderBackend;
 use gosub_renderer::layouter::MyLayouter;
@@ -18,8 +18,8 @@ struct MyModuleConfiguration;
 
 impl ModuleConfiguration for MyModuleConfiguration {
     type CssSystem = MyCssSystem;
-    type Document = MyDocument;
-    type HtmlParser = MyHtmlParser;
+    type Document = MyDocument<Self>;
+    type HtmlParser = MyHtmlParser<Self>;
     type Layouter = MyLayouter;
     type TreeDrawer = MyTreeDrawer;
     type RenderTree = MyRenderTree;
@@ -33,8 +33,8 @@ fn main() {
 fn main_do_things<C: ModuleConfiguration>() {
     let backend = C::RenderBackend::new();
     let css_system = C::CssSystem::new();
-    let document = C::Document::new();
-    let html_parser = C::HtmlParser::new();
+    let document = C::Document::new("https://example.com");
+    let html_parser = C::HtmlParser::new(document.clone());
     let layouter = C::Layouter::new();
     let tree_drawer = C::TreeDrawer::new();
     let render_tree = C::RenderTree::new();

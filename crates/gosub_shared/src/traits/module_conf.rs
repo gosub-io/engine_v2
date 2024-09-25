@@ -1,7 +1,10 @@
 use crate::traits::css_system::CssSystem;
 use crate::traits::document::Document;
 use crate::traits::html5_parser::HtmlParser;
-use crate::traits::layouter::{Layouter, RenderBackend, RenderTree, TreeDrawer};
+use crate::traits::layouter::Layouter;
+use crate::traits::render_backend::RenderBackend;
+use crate::traits::render_tree::RenderTree;
+use crate::traits::tree_drawer::TreeDrawer;
 
 pub trait ModuleConfiguration: Sized {
     type CssSystem: CssSystem;

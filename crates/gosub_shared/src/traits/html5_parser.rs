@@ -1,5 +1,4 @@
 use crate::traits::document::HasDocument;
-use crate::traits::module_conf::ModuleConfiguration;
 
 pub trait HasHtmlParser<D: HasDocument>: Sized {
     // type CssSystem: CssSystem;
@@ -12,11 +11,6 @@ pub trait HasHtmlParser<D: HasDocument>: Sized {
 //     type Document = HP::Document;
 // }
 
-impl<C: ModuleConfiguration> HasHtmlParser<C> for C {
-    // type CssSystem = <Self as ModuleConfiguration>::CssSystem;
-    // type Document = <Self as ModuleConfiguration>::Document;
-    type HtmlParser = <Self as ModuleConfiguration>::HtmlParser;
-}
 
 pub trait HtmlParser<C: HasDocument>: Sized {
     fn do_html_parser_things(&self);

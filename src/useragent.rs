@@ -1,3 +1,15 @@
+struct MyModuleConfiguration;
+
+impl ModuleConfiguration for MyModuleConfiguration {
+    type CssSystem = MyCssSystem;
+    type Document = MyDocument;
+    type HtmlParser = MyHtmlParser;
+    type Layouter = MyLayouter;
+    type TreeDrawer = MyTreeDrawer;
+    type RenderTree = MyRenderTree;
+    type RenderBackend = MyRenderBackend;
+}
+
 fn main() {
     main_do_things::<MyModuleConfiguration>();
 }

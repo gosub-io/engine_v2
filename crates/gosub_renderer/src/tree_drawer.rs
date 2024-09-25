@@ -1,6 +1,7 @@
-use gosub_shared::traits::renderer::{HasLayouter, TreeDrawer};
+use gosub_shared::traits::layouter::HasLayouter;
+use gosub_shared::traits::tree_drawer::TreeDrawer;
 
-struct MyTreeDrawer;
+pub struct MyTreeDrawer;
 
 impl<C: HasLayouter> TreeDrawer<C> for MyTreeDrawer {
     fn do_tree_drawer_things(&self) {

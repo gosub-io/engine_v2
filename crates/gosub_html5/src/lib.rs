@@ -1,3 +1,3 @@
-mod document;
-mod html5parser;
+pub mod document;
+pub mod html5parser;
 

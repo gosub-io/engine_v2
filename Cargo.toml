@@ -17,7 +17,7 @@ members = [
 
 [[bin]]
 name = "gosub-user-agent"
-path = "src/main.rs"
+path = "src/useragent.rs"
 
 [dependencies]
 gosub_shared = { path = "./crates/gosub_shared", features = [] }

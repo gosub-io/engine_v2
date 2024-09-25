@@ -1,6 +1,6 @@
 use gosub_shared::traits::css_system::CssSystem;
 
-struct MyCssSystem;
+pub struct MyCssSystem;
 
 impl CssSystem for MyCssSystem {
     fn do_css_things(&self) {

@@ -1,7 +1,7 @@
 use gosub_shared::traits::css_system::HasCssSystem;
 use gosub_shared::traits::document::Document;
 
-struct MyDocument;
+pub struct MyDocument;
 
 impl<C: HasCssSystem> Document<C> for MyDocument {
     fn do_document_things(&self) {

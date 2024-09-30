@@ -1,18 +1,29 @@
 use gosub_shared::node_id::NodeId;
+use gosub_shared::traits::css_system::HasCssSystem;
 use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::node::{HasNode, Node as _};
 use crate::node::arena::NodeArena;
 use crate::node::builder::NodeBuilder;
+use crate::node::node_impl::Node;
 
-pub struct MyDocument<C: HasDocument> {
-    arena: NodeArena<<C::Document as Document>::Node>,
+pub struct MyDocument<C: HasCssSystem> {
+    arena: NodeArena<Self>,
     url: String,
     _marker: std::marker::PhantomData<C>,
 }
 
-impl<C: HasDocument + HasNode> Document for MyDocument<C> {
-    type NodeBuilder = NodeBuilder<C>;
-    type Node = <C::Document as Document>::Node;
+impl<C: HasCssSystem> HasDocument for MyDocument<C> { type Document = MyDocument<C::CssSystem>; }
+
+impl<C: HasCssSystem> HasCssSystem for MyDocument<C> { type CssSystem = C::CssSystem; }
+
+impl<C: HasCssSystem> HasNode for MyDocument<C> {
+    type Node = Node;
+    type NodeBuilder = NodeBuilder<Self::Node>;
+}
+
+impl<C: HasCssSystem> Document<C> for MyDocument<C> {
+    type Node = Node;
+    type NodeBuilder = NodeBuilder<Self::Node>;
 
     fn new(url: &str) -> Self {
         Self {

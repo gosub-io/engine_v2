@@ -1,10 +1,8 @@
 use crate::document::DocumentHandle;
 use crate::traits::document::HasDocument;
 
-pub trait HasHtmlParser<D: HasDocument>: Sized {
-    // type CssSystem: CssSystem;
-    // type Document: Document<Self>;
-    type HtmlParser: HtmlParser<D>;
+pub trait HasHtmlParser: Sized + HasDocument {
+    type HtmlParser: HtmlParser<Self::Document>;
 }
 
 // impl<HP: HasHtmlParser> HasDocument for HP {
@@ -13,7 +11,7 @@ pub trait HasHtmlParser<D: HasDocument>: Sized {
 // }
 
 
-pub trait HtmlParser<C: HasDocument>: Sized {
+pub trait HtmlParser<C: HasDocument>: Sized + HasHtmlParser {
     fn new(doc_handle: DocumentHandle<C>) -> Self;
     fn parse_str(&mut self, input: &str);
 }

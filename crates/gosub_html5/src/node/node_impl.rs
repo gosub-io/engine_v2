@@ -2,6 +2,7 @@ use gosub_shared::node_id::NodeId;
 use std::collections::HashMap;
 use std::fmt::Display;
 use gosub_shared::traits::node::{ElementData as ElementDataTrait, TextData as TextDataTrait, CommentData as CommentDataTrait, DocTypeData as DocTypeDataTrait, HasNode};
+use crate::node::builder::NodeBuilder;
 
 #[derive(Debug, Clone)]
 pub struct ElementAttribute {
@@ -207,6 +208,7 @@ pub struct Node {
 
 impl HasNode for Node {
     type Node = Node;
+    type NodeBuilder = NodeBuilder<Self::Node>;
 }
 
 impl gosub_shared::traits::node::Node for Node {

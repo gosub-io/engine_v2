@@ -6,7 +6,7 @@ use crate::traits::document::HasDocument;
 pub struct DocumentHandle<C: HasDocument>(pub Rc<RefCell<C::Document>>);
 
 impl <C: HasDocument> DocumentHandle<C> {
-    pub fn new(document: <C as HasDocument>::Document) -> Self {
+    pub fn new(document: C::Document) -> Self {
         Self(Rc::new(RefCell::new(document)))
     }
 

@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::fmt::Display;
 use crate::node_id::NodeId;
+use crate::traits::css_system::HasCssSystem;
 
 // As long as the enum NodeData implements this trait, we don't have to specify in this shared crate
 pub trait NodeData: Sized {}
@@ -60,7 +61,7 @@ pub trait Node: Sized {
     fn get_doctype_data(&self) -> Option<&impl DocTypeData>;
 }
 
-pub trait NodeBuilder<N: HasNode>: Sized {
+pub trait NodeBuilder<N: Node>: Sized {
     fn new_element_node(name: &str, namespace: &str) -> N;
     fn new_text_node(content: &str) -> N;
     fn new_comment_node(content: &str) -> N;
@@ -69,5 +70,5 @@ pub trait NodeBuilder<N: HasNode>: Sized {
 
 pub trait HasNode: Sized {
     type Node: Node;
-    type NodeBuilder: NodeBuilder<Self>;
+    type NodeBuilder: NodeBuilder<Self::Node>;
 }

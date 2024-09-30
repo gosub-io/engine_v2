@@ -3,22 +3,12 @@ use crate::traits::document::Document;
 use crate::traits::layouter::{HasLayouter, Layouter};
 use crate::traits::render_tree::RenderTree;
 
-pub trait HasTreeDrawer: Sized {
-    type Document: Document<Self>;
-    type CssSystem: CssSystem;
-    type RenderTree: RenderTree<Self>;
-    type Layouter: Layouter<Self>;
-    type TreeDrawer: TreeDrawer<Self>;
+pub trait HasTreeDrawer: Sized + HasLayouter {
+    type TreeDrawer: TreeDrawer<Self::Layouter>;
 }
 
-impl<TD: HasTreeDrawer> HasLayouter for TD {
-    type Document = TD::Document;
-    type CssSystem = TD::CssSystem;
-    type RenderTree = TD::RenderTree;
-    type Layouter = TD::Layouter;
-}
 
-pub trait TreeDrawer<C: HasLayouter>: Sized {
+pub trait TreeDrawer<C: HasLayouter>: Sized + HasTreeDrawer {
     fn do_tree_drawer_things(&self);
 
     fn new() -> Self;

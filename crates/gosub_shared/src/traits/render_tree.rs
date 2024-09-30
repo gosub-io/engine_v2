@@ -4,7 +4,7 @@ use crate::traits::layouter::HasLayouter;
 
 pub trait HasRenderTree: Sized {
     type CssSystem: CssSystem;
-    type Document: Document<Self>;
+    type Document: Document;
     type RenderTree: RenderTree<Self>;
 }
 

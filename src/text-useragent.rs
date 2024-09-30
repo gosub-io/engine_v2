@@ -1,5 +1,7 @@
 use gosub_css3::MyCssSystem;
-use gosub_html5::document::MyDocument;
+use gosub_html5::document::builder::DocumentBuilder;
+use gosub_html5::document::document::MyDocument;
+use gosub_html5::document::walker::DocumentWalker;
 use gosub_html5::html5parser::MyHtmlParser;
 use gosub_renderer::text_backend::MyTextRenderBackend;
 use gosub_renderer::layouter::MyLayouter;
@@ -18,8 +20,8 @@ struct MyModuleConfiguration;
 
 impl ModuleConfiguration for MyModuleConfiguration {
     type CssSystem = MyCssSystem;
-    type Document = MyDocument;
-    type HtmlParser = MyHtmlParser;
+    type Document = MyDocument<Self>;
+    type HtmlParser = MyHtmlParser<Self>;
     type Layouter = MyLayouter;
     type TreeDrawer = MyTreeDrawer;
     type RenderTree = MyRenderTree;
@@ -31,19 +33,12 @@ fn main() {
 }
 
 fn main_do_things<C: ModuleConfiguration>() {
-    let backend = C::RenderBackend::new();
-    let css_system = C::CssSystem::new();
-    let document = C::Document::new();
-    let html_parser = C::HtmlParser::new();
-    let layouter = C::Layouter::new();
-    let tree_drawer = C::TreeDrawer::new();
-    let render_tree = C::RenderTree::new();
 
-    css_system.do_css_things();
-    document.do_document_things();
-    html_parser.do_html_parser_things();
-    layouter.do_layouter_things();
-    tree_drawer.do_tree_drawer_things();
-    render_tree.do_render_tree_things(&document);
-    backend.do_render_backend_things();
+    let handle = DocumentBuilder::new_document("https://example.com");
+    let mut html_parser = C::HtmlParser::new(handle.clone());
+
+    html_parser.parse_str("<html><head></head><body><p>Hello world!</p></body></html>");
+
+    let walker = DocumentWalker::new(handle.clone());
+    walker.print_tree(handle.clone());
 }

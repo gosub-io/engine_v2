@@ -10,7 +10,6 @@ pub trait HasHtmlParser: Sized + HasDocument {
 //     type Document = HP::Document;
 // }
 
-
 pub trait HtmlParser<C: HasDocument>: Sized + HasHtmlParser {
     fn new(doc_handle: DocumentHandle<C>) -> Self;
     fn parse_str(&mut self, input: &str);

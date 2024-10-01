@@ -1,4 +1,4 @@
-pub trait HasCssSystem {
+pub trait HasCssSystem: Sized {
     type CssSystem: CssSystem;
 }
 

@@ -1,15 +1,16 @@
 use gosub_shared::document::DocumentHandle;
 use gosub_shared::traits::document::{Document, HasDocument};
-use gosub_shared::traits::node::CommentData;
+use gosub_shared::traits::node::{CommentData, HasNode};
 use gosub_shared::traits::node::DocTypeData;
 use gosub_shared::traits::node::ElementData;
 use gosub_shared::traits::node::TextData;
-use gosub_shared::traits::node::{HasNode, Node};
+use gosub_shared::traits::node::Node;
 use std::io::Write;
 
 pub struct DocumentWalker<C: HasDocument> {
     pub doc_handle: DocumentHandle<C>,
 }
+
 impl<C: HasDocument> DocumentWalker<C> {
     pub fn new(doc_handle: DocumentHandle<C>) -> Self {
         Self {
@@ -24,7 +25,7 @@ impl<C: HasDocument> DocumentWalker<C> {
         }
     }
 
-    fn print_element(&self, node: &<C::Document as Document<C::CssSystem>>::Node, prefix: String, last: bool, f: &mut impl Write) {
+    fn print_element(&self, node: &<<C as HasDocument>::Document as HasNode>::Node, prefix: String, last: bool, f: &mut impl Write) {
         let mut buffer = prefix.clone();
         if last {
             buffer.push_str("└─ ");

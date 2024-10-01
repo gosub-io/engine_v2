@@ -7,12 +7,12 @@ use crate::traits::render_tree::HasRenderTree;
 use crate::traits::tree_drawer::HasTreeDrawer;
 
 pub trait ModuleConfiguration:
-Sized
-+ HasCssSystem
-+ HasDocument
-+ HasHtmlParser
-+ HasLayouter
-+ HasRenderTree
-+ HasTreeDrawer
-+ HasRenderBackend
+    Sized
+    + HasCssSystem
+    + HasDocument
+    + HasHtmlParser
+    + HasLayouter
+    + HasRenderTree
+    + HasTreeDrawer
+    + HasRenderBackend
 {}

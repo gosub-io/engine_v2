@@ -4,7 +4,7 @@ use gosub_shared::traits::css_system::HasCssSystem;
 use gosub_shared::traits::document::HasDocument;
 use gosub_shared::traits::document::Document;
 use gosub_shared::traits::html5_parser::{HasHtmlParser, HtmlParser};
-use gosub_shared::traits::node::{HasNode, NodeBuilder as _};
+use gosub_shared::traits::node::{HasNode, Node};
 use crate::node::builder::NodeBuilder;
 
 pub struct MyHtmlParser<C: HasDocument> {
@@ -18,6 +18,11 @@ impl<C: HasDocument> HasHtmlParser for MyHtmlParser<C> { type HtmlParser = MyHtm
 //     type Node = C::Node;
 //     type NodeBuilder = NodeBuilder<Self::Node>;
 // }
+
+impl<C: HasDocument> HasNode for MyHtmlParser<C> {
+    type Node = C::Node;
+    // type NodeBuilder = NodeBuilder<Self::Node>;
+}
 
 impl<C: HasDocument> HasDocument for MyHtmlParser<C> { type Document = C::Document; }
 
@@ -48,8 +53,7 @@ impl<C: HasDocument> HtmlParser<C> for MyHtmlParser<C> {
 
         let mut binding = self.doc_handle.get_mut();
         
-        type Builder<C: HasDocument> = NodeBuilder<<C::Document as Document<C::CssSystem>>::Node>;
-        
+        type Builder<C: Node> = NodeBuilder<<C as HasNode>::Node>;
 
         let node1 = Builder::<C>::new_element_node("html", "html");
         let node1_id = binding.register_node_at(node1, NodeId::root(), None);

@@ -1,6 +1,4 @@
-use crate::traits::css_system::CssSystem;
-use crate::traits::document::Document;
-use crate::traits::render_tree::{HasRenderTree, RenderTree};
+use crate::traits::render_tree::HasRenderTree;
 
 pub trait HasLayouter: Sized  + HasRenderTree {
     type Layouter: Layouter<Self::RenderTree>;

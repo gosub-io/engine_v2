@@ -1,44 +1,32 @@
-use gosub_shared::traits::document::Document;
-use gosub_shared::traits::node::{CommentData, DocTypeData, ElementData, TextData, HasNode};
+use gosub_shared::traits::node::{CommentData, DocTypeData, ElementData, HasNode, TextData};
 use gosub_shared::traits::node::Node;
+use gosub_shared::traits::node::NodeBuilder as NodeBuilderTrait;
 
-pub struct NodeBuilder<N: Node> {
+pub struct NodeBuilder<N: HasNode> {
     _marker: std::marker::PhantomData<N>,
 }
 
-// impl<N: Node> NodeBuilder<N> {
-//     pub fn new_element_node(name: &str, namespace: &str) -> N {
-//         N::new(N::NodeData::Element(ElementData::new(name.into(), namespace.into())))
-//     }
-// 
-//     pub fn new_text_node(content: &str) -> N {
-//         N::new(N::NodeData::Text(TextData::new(content.into())))
-//     }
-// 
-//     pub fn new_comment_node(content: &str) -> N {
-//         N::new(N::NodeData::Comment(CommentData::new(content.into())))
-//     }
-// 
-//     pub fn new_doctype_node(name: &str, public_id: &str, system_id: &str) -> N {
-//         N::new(N::NodeData::DocType(DocTypeData::new(name.into(), public_id.into(), system_id.into())))
-//     }
-// }
-
-
-impl<N: Node> gosub_shared::traits::node::NodeBuilder<N> for NodeBuilder<N> {
+impl<N: Node> NodeBuilderTrait<N> for NodeBuilder<N>
+where
+    N::NodeData: From<N::ElementData> + From<N::CommentData> + From<N::TextData> + From<N::DocTypeData>
+{
     fn new_element_node(name: &str, namespace: &str) -> N {
-        todo!()
+        let data = N::ElementData::new(name.into(), namespace.into());
+        N::new(data.into()).into()
     }
 
     fn new_text_node(content: &str) -> N {
-        todo!()
+        let data = N::TextData::new(content.into());
+        N::new(data.into())
     }
 
     fn new_comment_node(content: &str) -> N {
-        todo!()
+        let data = N::CommentData::new(content.into());
+        N::new(data.into())
     }
 
     fn new_doctype_node(name: &str, public_id: &str, system_id: &str) -> N {
-        todo!()
+        let data = N::DocTypeData::new(name.into(), public_id.into(), system_id.into());
+        N::new(data.into())
     }
 }

@@ -1,7 +1,4 @@
-use crate::traits::css_system::CssSystem;
-use crate::traits::document::Document;
-use crate::traits::layouter::{HasLayouter, Layouter};
-use crate::traits::render_tree::RenderTree;
+use crate::traits::layouter::HasLayouter;
 
 pub trait HasTreeDrawer: Sized + HasLayouter {
     type TreeDrawer: TreeDrawer<Self::Layouter>;

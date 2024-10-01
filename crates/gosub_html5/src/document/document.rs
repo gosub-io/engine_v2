@@ -1,29 +1,30 @@
 use gosub_shared::node_id::NodeId;
-use gosub_shared::traits::css_system::HasCssSystem;
+use gosub_shared::traits::css_system::{CssSystem, HasCssSystem};
 use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::node::{HasNode, Node as _};
 use crate::node::arena::NodeArena;
-use crate::node::builder::NodeBuilder;
-use crate::node::node_impl::Node;
 
-pub struct MyDocument<C: HasCssSystem> {
-    arena: NodeArena<Self>,
+pub struct MyDocument<C: HasCssSystem, N: HasNode> {
+    arena: NodeArena<N>,
     url: String,
     _marker: std::marker::PhantomData<C>,
 }
 
-impl<C: HasCssSystem> HasDocument for MyDocument<C> { type Document = MyDocument<C::CssSystem>; }
-
-impl<C: HasCssSystem> HasCssSystem for MyDocument<C> { type CssSystem = C::CssSystem; }
-
-impl<C: HasCssSystem> HasNode for MyDocument<C> {
-    type Node = Node;
-    type NodeBuilder = NodeBuilder<Self::Node>;
+impl<C: HasCssSystem, N: HasNode> HasDocument for MyDocument<C, N> {
+    type Document = MyDocument<C::CssSystem, N::Node>;
 }
 
-impl<C: HasCssSystem> Document<C> for MyDocument<C> {
-    type Node = Node;
-    type NodeBuilder = NodeBuilder<Self::Node>;
+impl<C: HasCssSystem, N: HasNode> HasCssSystem for MyDocument<C, N> {
+    type CssSystem = C::CssSystem;
+}
+
+impl<C: HasCssSystem, N: HasNode> HasNode for MyDocument<C, N> {
+    type Node = N::Node;
+    // type NodeBuilder = NodeBuilder<Self::Node>;
+}
+
+impl<C: HasCssSystem, N: HasNode> Document<C, N> for MyDocument<C, N> {
+    // type Node = N::Node;
 
     fn new(url: &str) -> Self {
         Self {
@@ -52,5 +53,13 @@ impl<C: HasCssSystem> Document<C> for MyDocument<C> {
 
     fn get_node_mut(&mut self, id: NodeId) -> Option<&mut Self::Node> {
         self.arena.get_node_mut(id)
+    }
+
+    fn do_doc_things_with_css(&self, css: C::CssSystem) {
+        css.do_css_things();
+    }
+
+    fn do_document_things(&self) {
+        todo!()
     }
 }

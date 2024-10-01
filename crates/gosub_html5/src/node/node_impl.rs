@@ -1,8 +1,8 @@
 use gosub_shared::node_id::NodeId;
 use std::collections::HashMap;
 use std::fmt::Display;
-use gosub_shared::traits::node::{ElementData as ElementDataTrait, TextData as TextDataTrait, CommentData as CommentDataTrait, DocTypeData as DocTypeDataTrait, HasNode};
-use crate::node::builder::NodeBuilder;
+use gosub_shared::traits::node::{HasNode, Node as NodeTrait};
+use crate::node::node_impl;
 
 #[derive(Debug, Clone)]
 pub struct ElementAttribute {
@@ -206,13 +206,21 @@ pub struct Node {
     data: NodeData,
 }
 
-impl HasNode for Node {
-    type Node = Node;
-    type NodeBuilder = NodeBuilder<Self::Node>;
-}
+// impl HasNode for Node {
+//     type Node = Node;
+//     type NodeBuilder = NodeBuilder<Self::Node>;
+// }
 
-impl gosub_shared::traits::node::Node for Node {
+
+impl NodeTrait for Node
+where
+    NodeData: From<node_impl::ElementData> + From<node_impl::CommentData> + From<node_impl::TextData> + From<node_impl::DocTypeData>
+{
     type NodeData = NodeData;
+    type ElementData = ElementData;
+    type TextData = TextData;
+    type CommentData = CommentData;
+    type DocTypeData = DocTypeData;
 
     fn new(data: Self::NodeData) -> Self {
         Self {
@@ -256,31 +264,36 @@ impl gosub_shared::traits::node::Node for Node {
         }
     }
 
-    fn get_element_data(&self) -> Option<&impl ElementDataTrait> {
+    fn get_element_data(&self) -> Option<&Self::ElementData> {
         match self.data {
             NodeData::Element(ref data) => Some(data),
             _ => None,
         }
     }
 
-    fn get_text_data(&self) -> Option<&impl TextDataTrait> {
+    fn get_text_data(&self) -> Option<&Self::TextData> {
         match self.data {
             NodeData::Text(ref data) => Some(data),
             _ => None,
         }
     }
 
-    fn get_comment_data(&self) -> Option<&impl CommentDataTrait> {
+    fn get_comment_data(&self) -> Option<&Self::CommentData> {
         match self.data {
             NodeData::Comment(ref data) => Some(data),
             _ => None,
         }
     }
 
-    fn get_doctype_data(&self) -> Option<&impl DocTypeDataTrait> {
+    fn get_doctype_data(&self) -> Option<&Self::DocTypeData> {
         match self.data {
             NodeData::DocType(ref data) => Some(data),
             _ => None,
         }
     }
+}
+
+impl HasNode for Node {
+    type Node = Node;
+    // type NodeBuilder = NodeBuilder<Self::Node>;
 }

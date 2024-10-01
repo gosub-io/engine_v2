@@ -3,8 +3,8 @@ use gosub_html5::document::builder::DocumentBuilder;
 use gosub_html5::document::document::MyDocument;
 use gosub_html5::document::walker::DocumentWalker;
 use gosub_html5::html5parser::MyHtmlParser;
+use gosub_html5::node::node_impl::Node as MyNode;
 use gosub_renderer::backend::MyRenderBackend;
-use gosub_renderer::text_backend::MyTextRenderBackend;
 use gosub_renderer::layouter::MyLayouter;
 use gosub_renderer::render_tree::MyRenderTree;
 use gosub_renderer::tree_drawer::MyTreeDrawer;
@@ -13,6 +13,7 @@ use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::html5_parser::{HasHtmlParser, HtmlParser};
 use gosub_shared::traits::layouter::{HasLayouter, Layouter};
 use gosub_shared::traits::module_conf::ModuleConfiguration;
+use gosub_shared::traits::node::HasNode;
 use gosub_shared::traits::render_backend::{HasRenderBackend, RenderBackend};
 use gosub_shared::traits::render_tree::{HasRenderTree, RenderTree};
 use gosub_shared::traits::tree_drawer::{HasTreeDrawer, TreeDrawer};
@@ -24,8 +25,12 @@ impl HasCssSystem for MyModuleConfiguration {
     type CssSystem = MyCssSystem;
 }
 
+impl HasNode for MyModuleConfiguration {
+    type Node = MyNode;
+}
+
 impl HasDocument for MyModuleConfiguration {
-    type Document = MyDocument<Self::CssSystem>;
+    type Document = MyDocument<Self::CssSystem, Self::Node>;
 }
 
 impl HasHtmlParser for MyModuleConfiguration {

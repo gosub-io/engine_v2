@@ -1,8 +1,8 @@
-use gosub_shared::traits::node::{CommentData, DocTypeData, ElementData, HasNode, TextData};
+use gosub_shared::traits::node::{CommentData, DocTypeData, ElementData, TextData};
 use gosub_shared::traits::node::Node;
 use gosub_shared::traits::node::NodeBuilder as NodeBuilderTrait;
 
-pub struct NodeBuilder<N: HasNode> {
+pub struct NodeBuilder<N: Node> {
     _marker: std::marker::PhantomData<N>,
 }
 

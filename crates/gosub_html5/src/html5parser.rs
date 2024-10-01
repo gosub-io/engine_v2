@@ -4,8 +4,9 @@ use gosub_shared::traits::css_system::HasCssSystem;
 use gosub_shared::traits::document::HasDocument;
 use gosub_shared::traits::document::Document;
 use gosub_shared::traits::html5_parser::{HasHtmlParser, HtmlParser};
-use gosub_shared::traits::node::{HasNode, Node};
+use gosub_shared::traits::node::HasNode;
 use crate::node::builder::NodeBuilder;
+use gosub_shared::traits::node::NodeBuilder as NodeBuilderTrait;
 
 pub struct MyHtmlParser<C: HasDocument> {
     doc_handle: DocumentHandle<C>,
@@ -53,9 +54,9 @@ impl<C: HasDocument> HtmlParser<C> for MyHtmlParser<C> {
 
         let mut binding = self.doc_handle.get_mut();
         
-        type Builder<C: Node> = NodeBuilder<<C as HasNode>::Node>;
+        type Builder<C: HasNode> = NodeBuilder::<<C as HasNode>::Node>;
 
-        let node1 = Builder::<C>::new_element_node("html", "html");
+        let node1 = Builder::new_element_node("html", "html");
         let node1_id = binding.register_node_at(node1, NodeId::root(), None);
 
         let node2 = Builder::<C>::new_element_node("head", "html");

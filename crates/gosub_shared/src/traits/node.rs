@@ -42,7 +42,10 @@ pub trait DocTypeData {
     fn system_id(&self) -> &str;
 }
 
-pub trait Node: Sized + HasNode {
+pub trait Node: Sized + HasNode
+where
+    Self::NodeData: From<Self::ElementData> + From<Self::CommentData> + From<Self::TextData> + From<Self::DocTypeData>
+{
     type NodeData: NodeData;
     type ElementData: ElementData;
     type TextData: TextData;

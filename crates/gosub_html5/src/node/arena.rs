@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 use gosub_shared::node_id::NodeId;
-use gosub_shared::traits::node::{HasNode, Node};
+use gosub_shared::traits::node::Node;
 
-pub struct NodeArena<C: HasNode> {
-    nodes: HashMap<NodeId, C::Node>,
+pub struct NodeArena<N: Node> {
+    nodes: HashMap<NodeId, N>,
     next_node_id: u32,
 }
 
-impl<C: HasNode> NodeArena<C> {
+impl<N: Node> NodeArena<N> {
     pub fn new() -> Self {
         Self {
             nodes: HashMap::new(),
@@ -15,7 +15,7 @@ impl<C: HasNode> NodeArena<C> {
         }
     }
 
-    pub fn add_node(&mut self, mut node: C::Node) -> NodeId {
+    pub fn add_node(&mut self, mut node: N) -> NodeId {
         let id = NodeId::new(self.next_node_id);
         self.next_node_id += 1;
 
@@ -28,11 +28,11 @@ impl<C: HasNode> NodeArena<C> {
         id
     }
 
-    pub fn get_node(&self, node_id: NodeId) -> Option<&C::Node> {
+    pub fn get_node(&self, node_id: NodeId) -> Option<&N> {
         self.nodes.get(&node_id)
     }
 
-    pub fn get_node_mut(&mut self, node_id: NodeId) -> Option<&mut C::Node> {
+    pub fn get_node_mut(&mut self, node_id: NodeId) -> Option<&mut N> {
         self.nodes.get_mut(&node_id)
     }
 

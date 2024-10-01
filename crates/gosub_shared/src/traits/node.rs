@@ -42,7 +42,7 @@ pub trait DocTypeData {
     fn system_id(&self) -> &str;
 }
 
-pub trait Node: Sized + HasNode
+pub trait Node: Sized
 where
     Self::NodeData: From<Self::ElementData> + From<Self::CommentData> + From<Self::TextData> + From<Self::DocTypeData>
 {
@@ -74,7 +74,7 @@ pub trait NodeBuilder<N: Node>: Sized {
     fn new_doctype_node(name: &str, public_id: &str, system_id: &str) -> N;
 }
 
-pub trait HasNode: Sized {
-    type Node: Node;
-    // type NodeBuilder: NodeBuilder<Self::Node>;
-}
+// pub trait HasNode: Sized {
+//     type Node: Node;
+//     // type NodeBuilder: NodeBuilder<Self::Node>;
+// }

@@ -1,7 +1,7 @@
 use gosub_shared::node_id::NodeId;
 use std::collections::HashMap;
 use std::fmt::Display;
-use gosub_shared::traits::node::{HasNode, Node as NodeTrait};
+use gosub_shared::traits::node::{Node as NodeTrait};
 use crate::node::node_impl;
 
 #[derive(Debug, Clone)]
@@ -293,7 +293,7 @@ where
     }
 }
 
-impl HasNode for Node {
-    type Node = Node;
-    // type NodeBuilder = NodeBuilder<Self::Node>;
-}
+// impl HasNode for Node {
+//     type Node = Node;
+//     // type NodeBuilder = NodeBuilder<Self::Node>;
+// }

@@ -1,29 +1,32 @@
-use gosub_shared::traits::document::Document;
-use gosub_shared::traits::node::{CommentData, DocTypeData, ElementData, TextData, HasNode};
+use gosub_shared::traits::node::{CommentData, DocTypeData, ElementData, TextData};
 use gosub_shared::traits::node::Node;
+use gosub_shared::traits::node::NodeBuilder as NodeBuilderTrait;
 
-pub struct NodeBuilder<C: HasNode> {
-    _marker: std::marker::PhantomData<C>,
+pub struct NodeBuilder<N: Node> {
+    _marker: std::marker::PhantomData<N>,
 }
 
-impl<C: HasNode> HasNode for NodeBuilder<C> {
-    type Node = C::Node;
-}
-
-impl<C: HasNode> NodeBuilder<C> {
-    pub fn new_element_node(name: &str, namespace: &str) -> C::Node {
-        C::Node::new(C::Node::NodeData::Element(ElementData::new(name.into(), namespace.into())))
+impl<N: Node> NodeBuilderTrait<N> for NodeBuilder<N>
+where
+    N::NodeData: From<N::ElementData> + From<N::CommentData> + From<N::TextData> + From<N::DocTypeData>
+{
+    fn new_element_node(name: &str, namespace: &str) -> N {
+        let data = N::ElementData::new(name.into(), namespace.into());
+        N::new(data.into()).into()
     }
 
-    pub fn new_text_node(content: &str) -> C::Node {
-        Self::Node::new(C::Node::NodeData::Text(TextData::new(content.into())))
+    fn new_text_node(content: &str) -> N {
+        let data = N::TextData::new(content.into());
+        N::new(data.into())
     }
 
-    pub fn new_comment_node(content: &str) -> C::Node {
-        Self::Node::new(C::Node::NodeData::Comment(CommentData::new(content.into())))
+    fn new_comment_node(content: &str) -> N {
+        let data = N::CommentData::new(content.into());
+        N::new(data.into())
     }
 
-    pub fn new_doctype_node(name: &str, public_id: &str, system_id: &str) -> C::Node {
-        Self::Node::new(C::Node::NodeData::DocType(DocTypeData::new(name.into(), public_id.into(), system_id.into())))
+    fn new_doctype_node(name: &str, public_id: &str, system_id: &str) -> N {
+        let data = N::DocTypeData::new(name.into(), public_id.into(), system_id.into());
+        N::new(data.into())
     }
 }

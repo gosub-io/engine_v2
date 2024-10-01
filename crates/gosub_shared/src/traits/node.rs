@@ -11,7 +11,7 @@ pub trait ElementAttribute: Display {
     fn value(&self) -> &str;
 }
 
-pub trait ElementData: NodeData {
+pub trait ElementData {
     fn new(name: &str, namespace: &str) -> Self;
     fn name(&self) -> &str;
     fn namespace(&self) -> &str;
@@ -25,25 +25,32 @@ pub trait ElementData: NodeData {
     fn set_class_state(&mut self, name: &str, active: bool);
 }
 
-pub trait TextData: NodeData {
+pub trait TextData {
     fn new(content: &str) -> Self;
     fn content(&self) -> &str;
 }
 
-pub trait CommentData: NodeData {
+pub trait CommentData {
     fn new(content: &str) -> Self;
     fn content(&self) -> &str;
 }
 
-pub trait DocTypeData: NodeData {
+pub trait DocTypeData {
     fn new(name: &str, public_id: &str, system_id: &str) -> Self;
     fn name(&self) -> &str;
     fn public_id(&self) -> &str;
     fn system_id(&self) -> &str;
 }
 
-pub trait Node: Sized {
+pub trait Node: Sized
+where
+    Self::NodeData: From<Self::ElementData> + From<Self::CommentData> + From<Self::TextData> + From<Self::DocTypeData>
+{
     type NodeData: NodeData;
+    type ElementData: ElementData;
+    type TextData: TextData;
+    type CommentData: CommentData;
+    type DocTypeData: DocTypeData;
 
     fn new(data: Self::NodeData) -> Self;
     fn id(&self) -> Option<NodeId>;
@@ -54,20 +61,20 @@ pub trait Node: Sized {
     fn children(&self) -> &Vec<NodeId>;
     fn add_child_at_position(&mut self, id: NodeId, position: Option<usize>);
 
-    fn get_element_data(&self) -> Option<&impl ElementData>;
-    fn get_text_data(&self) -> Option<&impl TextData>;
-    fn get_comment_data(&self) -> Option<&impl CommentData>;
-    fn get_doctype_data(&self) -> Option<&impl DocTypeData>;
+    fn get_element_data(&self) -> Option<&Self::ElementData>;
+    fn get_text_data(&self) -> Option<&Self::TextData>;
+    fn get_comment_data(&self) -> Option<&Self::CommentData>;
+    fn get_doctype_data(&self) -> Option<&Self::DocTypeData>;
 }
 
-pub trait NodeBuilder<N: HasNode>: Sized {
+pub trait NodeBuilder<N: Node>: Sized {
     fn new_element_node(name: &str, namespace: &str) -> N;
     fn new_text_node(content: &str) -> N;
     fn new_comment_node(content: &str) -> N;
     fn new_doctype_node(name: &str, public_id: &str, system_id: &str) -> N;
 }
 
-pub trait HasNode: Sized {
-    type Node: Node;
-    type NodeBuilder: NodeBuilder<Self>;
-}
+// pub trait HasNode: Sized {
+//     type Node: Node;
+//     // type NodeBuilder: NodeBuilder<Self::Node>;
+// }

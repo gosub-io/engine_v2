@@ -2,8 +2,8 @@ use gosub_shared::document::DocumentHandle;
 use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::document::HasDocument;
 use gosub_shared::traits::document::Document;
-use gosub_shared::traits::html5_parser::HtmlParser;
-use gosub_shared::traits::node::HasNode;
+use gosub_shared::traits::html5_parser::{HtmlParser};
+use gosub_shared::traits::node::NodeBuilder as _;
 use crate::node::builder::NodeBuilder;
 
 pub struct MyHtmlParser<C: HasDocument> {
@@ -11,7 +11,23 @@ pub struct MyHtmlParser<C: HasDocument> {
     parser_state: u32,  // dummy parser state
 }
 
-impl<C: HasDocument + HasNode> HtmlParser<C> for MyHtmlParser<C> {
+// impl<C: HasDocument> HasHtmlParser for MyHtmlParser<C> { type HtmlParser = MyHtmlParser<C::Document>; }
+
+// impl<C: HasDocument> HasNode for MyHtmlParser<C> {
+//     type Node = C::Node;
+//     type NodeBuilder = NodeBuilder<Self::Node>;
+// }
+
+// impl<C: HasDocument> HasNode for MyHtmlParser<C> {
+//     type Node = C::Node;
+//     // type NodeBuilder = NodeBuilder<Self::Node>;
+// }
+
+// impl<C: HasDocument> HasDocument for MyHtmlParser<C> { type Document = C::Document; type Node = C::Node; }
+//
+// impl<C: HasDocument> HasCssSystem for MyHtmlParser<C> { type CssSystem = C::CssSystem; }
+
+impl<C: HasDocument> HtmlParser<C> for MyHtmlParser<C> {
     fn new(doc_handle: DocumentHandle<C>) -> Self {
         Self {
             doc_handle: doc_handle.clone(),
@@ -36,19 +52,22 @@ impl<C: HasDocument + HasNode> HtmlParser<C> for MyHtmlParser<C> {
 
         let mut binding = self.doc_handle.get_mut();
 
-        let node1 = NodeBuilder::<C>::new_element_node("html", "html");
+        #[allow(type_alias_bounds)]
+        type BuilderType<C: HasDocument> = NodeBuilder<C::Node>;
+
+        let node1 = BuilderType::<C>::new_element_node("html", "html");
         let node1_id = binding.register_node_at(node1, NodeId::root(), None);
 
-        let node2 = NodeBuilder::<C>::new_element_node("head", "html");
+        let node2 = BuilderType::<C>::new_element_node("head", "html");
         let _node2_id = binding.register_node_at(node2, node1_id, None);
 
-        let node3 = NodeBuilder::<C>::new_element_node("body", "html");
+        let node3 = BuilderType::<C>::new_element_node("body", "html");
         let node3_id = binding.register_node_at(node3, node1_id, None);
 
-        let node4 = NodeBuilder::<C>::new_element_node("p", "html");
+        let node4 = BuilderType::<C>::new_element_node("p", "html");
         let node4_id = binding.register_node_at(node4, node3_id, None);
 
-        let node5 = NodeBuilder::<C>::new_text_node("hello world!");
+        let node5 = BuilderType::<C>::new_text_node("hello world!");
         let _node5_id = binding.register_node_at(node5, node4_id, None);
     }
 }

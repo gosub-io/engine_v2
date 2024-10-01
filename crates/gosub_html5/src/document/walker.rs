@@ -1,16 +1,17 @@
-use std::io::Write;
 use gosub_shared::document::DocumentHandle;
 use gosub_shared::traits::document::{Document, HasDocument};
-use gosub_shared::traits::node::{HasNode, Node};
-use gosub_shared::traits::node::ElementData;
-use gosub_shared::traits::node::CommentData;
+use gosub_shared::traits::node::{CommentData};
 use gosub_shared::traits::node::DocTypeData;
+use gosub_shared::traits::node::ElementData;
 use gosub_shared::traits::node::TextData;
+use gosub_shared::traits::node::Node;
+use std::io::Write;
 
 pub struct DocumentWalker<C: HasDocument> {
     pub doc_handle: DocumentHandle<C>,
 }
-impl<C: HasDocument + HasNode> DocumentWalker<C> {
+
+impl<C: HasDocument> DocumentWalker<C> {
     pub fn new(doc_handle: DocumentHandle<C>) -> Self {
         Self {
             doc_handle: doc_handle.clone(),
@@ -20,11 +21,11 @@ impl<C: HasDocument + HasNode> DocumentWalker<C> {
     pub fn print_tree(&self, doc_handle: DocumentHandle<C>) {
         let document = doc_handle.get();
         if let Some(root_node) = document.get_root_node() {
-            self.print_element(&root_node, "".to_string(), true, &mut std::io::stdout());
+            self.print_element(root_node, "".to_string(), true, &mut std::io::stdout());
         }
     }
 
-    fn print_element(&self, node: &<C as HasNode>::Node, prefix: String, last: bool, f: &mut impl Write) {
+    fn print_element(&self, node: &C::Node, prefix: String, last: bool, f: &mut impl Write) {
         let mut buffer = prefix.clone();
         if last {
             buffer.push_str("└─ ");
@@ -45,7 +46,7 @@ impl<C: HasDocument + HasNode> DocumentWalker<C> {
         }
         if let Some(data) = node.get_element_data() {
             writeln!(f, "{}<{}>", buffer, data.name()).unwrap();
-                for (i, attr) in data.attributes().iter().enumerate() {
+            for (i, attr) in data.attributes().iter().enumerate() {
                 let last = i == data.attributes().len() - 1;
                 writeln!(f, "{}    {}{}", buffer, attr, if last { "" } else { "," }).unwrap();
             }

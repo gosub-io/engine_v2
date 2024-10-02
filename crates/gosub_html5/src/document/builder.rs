@@ -13,5 +13,7 @@ impl <C: HasDocument> DocumentBuilder<C> {
 
     pub fn new_document_fragment(_context: C::Node) -> DocumentHandle<C> {
         todo!("not yet implemented")
+        // let doc = C::Document::new_with_rootnode(_context);
+        // DocumentHandle::new(doc);
     }
 }

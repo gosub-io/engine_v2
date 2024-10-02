@@ -1,4 +1,4 @@
-use gosub_shared::traits::node::{CommentData, DocTypeData, ElementData, TextData};
+use gosub_shared::traits::node::{CommentData, DocTypeData, ElementData, TextData, DocumentData};
 use gosub_shared::traits::node::Node;
 use gosub_shared::traits::node::NodeBuilder as NodeBuilderTrait;
 
@@ -27,6 +27,11 @@ where
 
     fn new_doctype_node(name: &str, public_id: &str, system_id: &str) -> N {
         let data = N::DocTypeData::new(name.into(), public_id.into(), system_id.into());
+        N::new(data.into())
+    }
+
+    fn new_document_node() -> N {
+        let data = N::DocumentData::new();
         N::new(data.into())
     }
 }

@@ -5,14 +5,14 @@ extended more easily.
 
 
 TODO / Test cases we need to cover:
-- [ ] add node structure
-- [ ] add different node types: Document, Element, Text, Comment, DocumentType
-- [ ] add document structure
-- [ ] add arena (with node_ids)
-- [ ] add css node structure
+- [X] add node structure
+- [X] add different node types: Document, Element, Text, Comment, DocumentType
+- [X] add document structure
+- [X] add arena (with node_ids)
+- [X] add css node structure
 - [ ] add css document tree
-- [ ] allow user to add nodes to DOM, build a document with a DocumentBuilder
-- [ ] allow user to parse a html5 string and return (random) nodes in a DOM document from it.
+- [X] allow user to add nodes to DOM, build a document with a DocumentBuilder
+- [X] allow user to parse a html5 string and return (random) nodes in a DOM document from it.
 - [ ] attach CSS stylesheets to the DOM
 - [ ] let user query the DOM for nodes
 - [ ] let user query the DOM for nodes with a specific CSS selector
@@ -20,3 +20,4 @@ TODO / Test cases we need to cover:
 - [ ] allow user to retrieve info from the node from its element data (like node_id, doc_handle)
 - [ ] allow user to modify node data from document element (don't know it this is needed / feasable)
 - [ ] add document task queue (optional for now)
+- [ ] Allow callers to update attributes in nodes in an efficient way

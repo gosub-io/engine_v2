@@ -1,10 +1,24 @@
-use gosub_shared::traits::css_system::{CssDeclaration as _ , CssRule as _, CssStylesheet as _ };
-use crate::stylesheet::{CssDeclaration, CssRule, CssStylesheet, CssValue};
+use gosub_shared::traits::css_system::CssStylesheet as _;
+use gosub_shared::traits::css_system::CssDeclaration as _;
+use gosub_shared::traits::css_system::CssRule as _;
+use gosub_shared::traits::css_system::CssStylesheet as _;
+use gosub_shared::traits::css_system::CssParser;
+use gosub_shared::traits::css_system::HasCssSystem;
+use crate::stylesheet::{CssDeclaration, CssValue};
 
-pub struct CssParser;
+pub struct MyCss3Parser<C: HasCssSystem> {
+    parser_state: u32,  // dummy parser state
+    _marker: std::marker::PhantomData<C>,
+}
 
-impl gosub_shared::traits::css_system::CssParser for CssParser {
-    type CssStylesheet = CssStylesheet;
+impl<C: HasCssSystem> CssParser<C> for MyCss3Parser<C> {
+
+    fn new() -> Self {
+        Self {
+            parser_state: 0,
+            _marker: std::marker::PhantomData,
+        }
+    }
 
     /// Parse a CSS stylesheet. Will generate a mock stylesheet for now:
     ///
@@ -17,19 +31,19 @@ impl gosub_shared::traits::css_system::CssParser for CssParser {
     ///     border: 1px solid black;
     /// }
     /// ```
-    fn parse_str(_input: &str) -> Self::CssStylesheet {
-        let mut stylesheet = CssStylesheet::new();
+    fn parse_str(&mut self, _input: &str) -> C::CssStylesheet {
+        let mut stylesheet = C::CssStylesheet::new();
 
-        let rule = CssRule::new();
+        let mut rule = C::CssRule::new();
         rule.add_selector("body");
-        rule.add_declaration(CssDeclaration::new(
+        rule.add_declaration(C::CssDeclaration::new(
             "color",
             CssValue::ColorValue("red".into()),
             false
         ));
         stylesheet.add_rule(rule);
 
-        let mut rule = CssRule::new();
+        let mut rule = C::CssRule::new();
         rule.add_selector("h1");
         rule.add_declaration(CssDeclaration::new(
             "border",
@@ -58,5 +72,20 @@ impl gosub_shared::traits::css_system::CssParser for CssParser {
         stylesheet.add_rule(rule);
 
         stylesheet
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use crate::MyCssSystem;
+    use super::*;
+
+    #[test]
+    fn test_css_stylesheet() {
+        let mut parser = MyCss3Parser::<MyCssSystem>::new();
+
+        let stylesheet = parser.parse_str("body { doesnt really matter; }");
+        assert_eq!(stylesheet.rules().len(), 2);
     }
 }

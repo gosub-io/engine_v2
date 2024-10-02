@@ -1,11 +1,26 @@
+use crate::traits::document::HasDocument;
+
 pub trait HasCssSystem: Sized {
-    type CssSystem: CssParser;
+    type CssStylesheet: CssStylesheet;
+    type CssRule: CssRule;
+    type CssDeclaration: CssDeclaration;
+    type CssValue: CssValue;
 }
+
+pub trait HasCssParser: Sized + HasDocument + HasCssSystem {
+    type CssParser: CssParser<Self>;
+}
+
+pub trait CssParser<C: HasCssSystem>: Sized {
+    fn new() -> Self;
+    fn parse_str(&mut self, input: &str) -> C::CssStylesheet;
+}
+
 
 pub trait CssValue: Sized {}
 
-pub trait CssDeclaration: Sized {
-    type CssValue: CssValue;
+pub trait CssDeclaration: Sized + HasCssSystem{
+    // type CssValue: CssValue;
 
     fn new(name: &str, value: Self::CssValue, important: bool) -> Self;
     fn name(&self) -> &str;
@@ -13,8 +28,8 @@ pub trait CssDeclaration: Sized {
     fn important(&self) -> bool;
 }
 
-pub trait CssRule: Sized {
-    type CssDeclaration: CssDeclaration;
+pub trait CssRule: Sized + HasCssSystem{
+    // type CssDeclaration: CssDeclaration;
 
     fn new() -> Self;
     fn add_selector(&mut self, selector: &str);
@@ -23,16 +38,10 @@ pub trait CssRule: Sized {
     fn declarations(&self) -> &Vec<Self::CssDeclaration>;
 }
 
-pub trait CssStylesheet: Sized {
-    type CssRule: CssRule;
+pub trait CssStylesheet: Sized + HasCssSystem{
+    // type CssRule: CssRule;
 
     fn new() -> Self;
     fn add_rule(&mut self, rule: Self::CssRule);
     fn rules(&self) -> &Vec<Self::CssRule>;
-}
-
-pub trait CssParser: Sized {
-    type CssStylesheet: CssStylesheet;
-
-    fn parse_str(input: &str) -> Self::CssStylesheet;
 }

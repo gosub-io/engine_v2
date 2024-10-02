@@ -1,5 +1,6 @@
 use std::fmt;
 use std::fmt::{Display, Formatter};
+use gosub_shared::traits::css_system::HasCssSystem;
 
 #[derive(Clone, Debug)]
 pub enum CssValue {
@@ -36,8 +37,14 @@ impl Display for CssValue {
     }
 }
 
+impl HasCssSystem for CssDeclaration {
+    type CssStylesheet = Self::CssStylesheet;
+    type CssRule = Self::CssRule;
+    type CssDeclaration = Self::CssDeclaration;
+    type CssValue = Self::CssValue;
+}
+
 impl gosub_shared::traits::css_system::CssDeclaration for CssDeclaration {
-    type CssValue = CssValue;
 
     fn new(name: &str, value: Self::CssValue, important: bool) -> Self {
         Self {
@@ -67,7 +74,7 @@ pub struct CssRule {
 }
 
 impl gosub_shared::traits::css_system::CssRule for CssRule {
-    type CssDeclaration = CssDeclaration;
+    // type CssDeclaration = CssDeclaration;
 
     fn new() -> Self {
         Self {
@@ -100,7 +107,7 @@ pub struct CssStylesheet {
 }
 
 impl gosub_shared::traits::css_system::CssStylesheet for CssStylesheet {
-    type CssRule = CssRule;
+    // type CssRule = CssRule;
 
     fn new() -> Self {
         Self {
@@ -119,11 +126,8 @@ impl gosub_shared::traits::css_system::CssStylesheet for CssStylesheet {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::parser::CssParser;
-    use gosub_shared::traits::css_system::CssParser as _;
-    use gosub_shared::traits::css_system::CssDeclaration as _;
+    use gosub_shared::traits::css_system::{CssDeclaration as _};
     use gosub_shared::traits::css_system::CssRule as _;
-    use gosub_shared::traits::css_system::CssStylesheet as _;
 
     #[test]
     fn test_css_value_display() {
@@ -159,11 +163,5 @@ mod tests {
         rule.add_declaration(CssDeclaration::new("color", CssValue::ColorValue("red".to_string()), false));
         assert_eq!(rule.selectors(), &vec!["body".to_string()]);
         assert_eq!(rule.declarations().len(), 1);
-    }
-
-    #[test]
-    fn test_css_stylesheet() {
-        let stylesheet = CssParser::parse_str("body { doesnt really matter; }");
-        assert_eq!(stylesheet.rules().len(), 2);
     }
 }

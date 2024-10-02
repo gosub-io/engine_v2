@@ -2,10 +2,7 @@ pub trait HasCssSystem: Sized {
     type CssSystem: CssParser;
 }
 
-pub trait CssValue: Sized {
-    fn new(value: &str) -> Self;
-    fn value(&self) -> &str;
-}
+pub trait CssValue: Sized {}
 
 pub trait CssDeclaration: Sized {
     type CssValue: CssValue;
@@ -35,7 +32,7 @@ pub trait CssStylesheet: Sized {
 }
 
 pub trait CssParser: Sized {
-    type CssStylesheet = CssStylesheet;
+    type CssStylesheet: CssStylesheet;
 
     fn parse(input: &str) -> Self::CssStylesheet;
 }

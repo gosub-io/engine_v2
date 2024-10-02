@@ -2,7 +2,7 @@
 pub mod stylesheet;
 pub mod parser;
 
-use gosub_shared::traits::css_system::{CssParser, CssStylesheet, HasCssSystem};
+use gosub_shared::traits::css_system::HasCssSystem;
 
 pub struct MyCssSystem;
 

@@ -9,6 +9,8 @@ pub enum CssValue {
     List(Vec<CssValue>)
 }
 
+impl gosub_shared::traits::css_system::CssValue for CssValue {}
+
 #[derive(Clone, Debug)]
 pub struct CssDeclaration {
     name: String,
@@ -34,8 +36,10 @@ impl Display for CssValue {
     }
 }
 
-impl CssDeclaration {
-    pub fn new(name: &str, value: CssValue, important: bool) -> Self {
+impl gosub_shared::traits::css_system::CssDeclaration for CssDeclaration {
+    type CssValue = CssValue;
+
+    fn new(name: &str, value: Self::CssValue, important: bool) -> Self {
         Self {
             name: name.to_string(),
             value,
@@ -43,15 +47,15 @@ impl CssDeclaration {
         }
     }
 
-    pub fn name(&self) -> &str {
+    fn name(&self) -> &str {
         &self.name
     }
 
-    pub fn value(&self) -> &CssValue {
+    fn value(&self) -> &CssValue {
         &self.value
     }
 
-    pub fn important(&self) -> bool {
+    fn important(&self) -> bool {
         self.important
     }
 }
@@ -62,27 +66,30 @@ pub struct CssRule {
     declarations: Vec<CssDeclaration>
 }
 
-impl CssRule {
-    pub fn new() -> Self {
+impl gosub_shared::traits::css_system::CssRule for CssRule {
+    type CssDeclaration = CssDeclaration;
+
+    fn new() -> Self {
         Self {
             selectors: Vec::new(),
             declarations: Vec::new()
         }
     }
 
-    pub fn add_selector(&mut self, selector: &str) {
+    fn add_selector(&mut self, selector: &str) {
         self.selectors.push(selector.to_string());
     }
 
-    pub fn add_declaration(&mut self, declaration: CssDeclaration) {
+    fn add_declaration(&mut self, declaration: Self::CssDeclaration) {
         self.declarations.push(declaration);
     }
 
-    pub fn selectors(&self) -> &Vec<String> {
+    fn selectors(&self) -> &Vec<String> {
         &self.selectors
     }
 
-    pub fn declarations(&self) -> &Vec<CssDeclaration> {
+
+    fn declarations(&self) -> &Vec<Self::CssDeclaration> {
         &self.declarations
     }
 }
@@ -93,6 +100,8 @@ pub struct CssStylesheet {
 }
 
 impl gosub_shared::traits::css_system::CssStylesheet for CssStylesheet {
+    type CssRule = CssRule;
+
     fn new() -> Self {
         Self {
             rules: Vec::new()
@@ -109,6 +118,8 @@ impl gosub_shared::traits::css_system::CssStylesheet for CssStylesheet {
 
 #[cfg(test)]
 mod tests {
+    use gosub_shared::traits::css_system::CssParser;
+use gosub_shared::traits::css_system::{CssDeclaration, CssRule};
     use super::*;
 
     #[test]
@@ -149,7 +160,7 @@ mod tests {
 
     #[test]
     fn test_css_stylesheet() {
-        let stylesheet = CssStylesheet::parse("body { doesnt really matter; }");
+        let stylesheet = CssParser::parse_str("body { doesnt really matter; }");
         assert_eq!(stylesheet.rules().len(), 2);
     }
 }

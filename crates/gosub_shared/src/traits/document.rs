@@ -22,4 +22,6 @@ pub trait Document<C: HasCssSystem>: Sized {
     fn update_node(&mut self, id: NodeId, node: Self::Node);
 
     fn get_url(&self) -> &str;
+    fn get_node_mut(&mut self, id: NodeId) -> Option<&mut Self::Node>;
+    fn get_node_clone(&self, id: NodeId) -> Option<Self::Node>;
 }

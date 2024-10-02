@@ -53,7 +53,7 @@ impl<C: HasDocument> DocumentWalker<C> {
             writeln!(f, "{}<{}>", buffer, data.name()).unwrap();
             for (i, attr) in data.attributes().iter().enumerate() {
                 let last = i == data.attributes().len() - 1;
-                writeln!(f, "{}    {}{}", buffer, attr, if last { "" } else { "," }).unwrap();
+                writeln!(f, "{}    {}={}{}", buffer, attr.0, attr.1, if last { "" } else { "," }).unwrap();
             }
         }
 

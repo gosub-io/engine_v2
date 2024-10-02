@@ -31,7 +31,7 @@ impl Display for ElementAttribute {
 pub struct ElementData {
     name: String,
     namespace: String,
-    attributes: Vec<ElementAttribute>,
+    attributes: HashMap<String, String>,
     classes: HashMap<String, bool>,     // classname -> is active or not
 }
 
@@ -42,7 +42,7 @@ impl gosub_shared::traits::node::ElementData for ElementData {
         Self {
             name: name.into(),
             namespace: namespace.into(),
-            attributes: Vec::new(),
+            attributes: HashMap::new(),
             classes: HashMap::new(),
         }
     }
@@ -55,12 +55,12 @@ impl gosub_shared::traits::node::ElementData for ElementData {
         self.namespace.as_str()
     }
 
-    fn attributes(&self) -> &Vec<impl gosub_shared::traits::node::ElementAttribute> {
+    fn attributes(&self) -> &HashMap<String, String> {
         &self.attributes
     }
 
     fn add_attribute(&mut self, name: &str, value: &str) {
-        self.attributes.push(ElementAttribute { name: name.into(), value: value.into() });
+        self.attributes.insert(name.into(), value.into());
 
         if name == "class" {
             for class in value.split_whitespace() {
@@ -70,7 +70,7 @@ impl gosub_shared::traits::node::ElementData for ElementData {
     }
 
     fn remove_attribute(&mut self, name: &str) {
-        self.attributes.retain(|attr| attr.name != name);
+        self.attributes.remove(name);
     }
 
     fn classes(&self) -> &HashMap<String, bool> {

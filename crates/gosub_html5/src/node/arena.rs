@@ -32,6 +32,10 @@ impl<N: Node> NodeArena<N> {
         self.nodes.insert(node_id, node);
     }
 
+    pub fn get_node_mut(&mut self, node_id: NodeId) -> Option<&mut N> {
+        self.nodes.get_mut(&node_id)
+    }
+
     pub fn get_node(&self, node_id: NodeId) -> Option<&N> {
         self.nodes.get(&node_id)
     }

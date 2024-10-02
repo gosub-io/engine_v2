@@ -15,6 +15,10 @@ members = [
     "crates/*"
 ]
 
+[[bench]]
+name = "node_update"
+harness = false
+
 [[bin]]
 name = "gosub-text-user-agent"
 path = "src/text-useragent.rs"

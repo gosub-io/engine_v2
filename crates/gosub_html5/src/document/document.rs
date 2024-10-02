@@ -48,6 +48,14 @@ impl<C: HasCssSystem> Document<C> for MyDocument<C> {
         self.arena.get_node(NodeId::root())
     }
 
+    fn get_node_clone(&self, id: NodeId) -> Option<Self::Node> {
+        self.arena.get_node(id).map(|n| n.clone())
+    }
+
+    fn get_node_mut(&mut self, id: NodeId) -> Option<&mut Self::Node> {
+        self.arena.get_node_mut(id)
+    }
+
     fn get_node(&self, id: NodeId) -> Option<&Self::Node> {
         self.arena.get_node(id)
     }

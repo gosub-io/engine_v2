@@ -15,7 +15,7 @@ pub trait ElementData {
     fn new(name: &str, namespace: &str) -> Self;
     fn name(&self) -> &str;
     fn namespace(&self) -> &str;
-    fn attributes(&self) -> &Vec<impl ElementAttribute>;
+    fn attributes(&self) -> &HashMap<String, String>;
     fn add_attribute(&mut self, name: &str, value: &str);
     fn remove_attribute(&mut self, name: &str);
     fn classes(&self) -> &HashMap<String, bool>;

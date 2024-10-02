@@ -1,4 +1,4 @@
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use gosub_css3::MyCssSystem;
 use gosub_html5::document::builder::DocumentBuilder;
 use gosub_html5::document::document::MyDocument;
@@ -54,8 +54,6 @@ impl ModuleConfiguration for MyModuleConfiguration {}
 
 
 fn bench_test_attach<C: ModuleConfiguration>(c: &mut Criterion) {
-    // let doc = MyDocument::<MyCssSystem>::new("https://example.com");
-    // let handle = DocumentHandle::new(doc);
     let mut handle = DocumentBuilder::new_document("https://example.com");
     let mut parser = C::HtmlParser::new(handle.clone());
     parser.parse_str("hello world!");
@@ -66,12 +64,12 @@ fn bench_test_attach<C: ModuleConfiguration>(c: &mut Criterion) {
     c.bench_function("bench_test_attach", |b| {
         b.iter(|| {
             // Detach node
-            if let Some(mut node) = binding.detach_node(node_id) {
+            if let Some(mut node) = black_box(binding.detach_node(node_id)) {
                 // Get the mutable data and add some attributes
                 if let Some(data) = node.get_element_data_mut() {
-                    data.add_attribute("class", "a b c");
-                    data.add_attribute("id", "myid");
-                    data.add_attribute("foo", "bar");
+                    data.add_attribute("class", black_box("a b c"));
+                    data.add_attribute("id", black_box("myid"));
+                    data.add_attribute("foo", black_box("bar"));
                 }
 
                 // Finally, reattach the node back into the document/arena
@@ -81,9 +79,29 @@ fn bench_test_attach<C: ModuleConfiguration>(c: &mut Criterion) {
     });
 }
 
+fn bench_test_mut<C: ModuleConfiguration>(c: &mut Criterion) {
+    let mut handle = DocumentBuilder::new_document("https://example.com");
+    let mut parser = C::HtmlParser::new(handle.clone());
+    parser.parse_str("hello world!");
+
+    let node_id = NodeId::new(6);
+    let mut binding = handle.get_mut();
+
+    c.bench_function("bench_test_mut", |b| {
+        b.iter(|| {
+            let node = black_box(binding.get_node_mut(node_id).unwrap());
+
+            // Get the mutable data and add some attributes
+            if let Some(data) = node.get_element_data_mut() {
+                data.add_attribute("class", black_box("a b c"));
+                data.add_attribute("id", black_box("myid"));
+                data.add_attribute("foo", black_box("bar"));
+            }
+        })
+    });
+}
+
 fn bench_test_clone<C: ModuleConfiguration>(c: &mut Criterion) {
-    // let doc = MyDocument::<MyCssSystem>::new("https://example.com");
-    // let handle = DocumentHandle::new(doc);
     let mut handle = DocumentBuilder::new_document("https://example.com");
     let mut parser = C::HtmlParser::new(handle.clone());
     parser.parse_str("hello world!");
@@ -93,28 +111,31 @@ fn bench_test_clone<C: ModuleConfiguration>(c: &mut Criterion) {
 
     c.bench_function("bench_test_clone", |b| {
         b.iter(|| {
-            // Clone node
-            let mut node = binding.get_node(node_id).unwrap().clone();
+            let mut cloned_node = binding.get_node_clone(node_id).unwrap();
 
-            // Get the mutable data and add some attributes
-            if let Some(data) = node.get_element_data_mut() {
-                data.add_attribute("class", "a b c");
-                data.add_attribute("id", "myid");
-                data.add_attribute("foo", "bar");
+            if let Some(data) = cloned_node.get_element_data_mut() {
+                data.add_attribute("class", black_box("a b c"));
+                data.add_attribute("id", black_box("myid"));
+                data.add_attribute("foo", black_box("bar"));
             }
 
-            binding.update_node(node_id, node);
+            binding.update_node(node_id, cloned_node);
         })
     });
 }
 
+
 fn bta(c: &mut Criterion) {
     bench_test_attach::<MyModuleConfiguration>(c);
+}
+
+fn btm(c: &mut Criterion) {
+    bench_test_mut::<MyModuleConfiguration>(c);
 }
 
 fn btc(c: &mut Criterion) {
     bench_test_clone::<MyModuleConfiguration>(c);
 }
 
-criterion_group!(benches, bta, btc);
+criterion_group!(benches, bta, btm, btc);
 criterion_main!(benches);

@@ -8,7 +8,7 @@ use crate::node::node_data::element::ElementData;
 use crate::node::node_data::text::TextData;
 use crate::node::node_impl;
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct Node {
     id: Option<NodeId>,
 
@@ -18,6 +18,18 @@ pub struct Node {
     is_registered: bool,
 
     data: NodeData,
+}
+
+impl Clone for Node {
+    fn clone(&self) -> Self {
+        Self {
+            id: self.id,
+            children: self.children.clone(),
+            parent: self.parent,
+            is_registered: self.is_registered,
+            data: self.data.clone(),
+        }
+    }
 }
 
 impl NodeTrait for Node

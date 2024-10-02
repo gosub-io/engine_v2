@@ -23,18 +23,19 @@ impl Display for CssValue {
             CssValue::Keyword(value) => write!(f, "{}", value),
             CssValue::ColorValue(value) => write!(f, "{}", value),
             CssValue::List(args) => {
-                let mut values = String::new();
-                for value in args {
-                    values.push_str(&format!("{}, ", value));
-                }
-                write!(f, "{}", values)
+                let res = args
+                    .iter()
+                    .map(|n| format!("{}", n))
+                    .collect::<Vec<String>>()
+                    .join(", ");
+                write!(f, "{}", res)
             }
         }
     }
 }
 
 impl CssDeclaration {
-    fn new(name: &str, value: CssValue, important: bool) -> Self {
+    pub fn new(name: &str, value: CssValue, important: bool) -> Self {
         Self {
             name: name.to_string(),
             value,
@@ -55,24 +56,25 @@ impl CssDeclaration {
     }
 }
 
-struct CssRule {
+#[derive(Clone, Debug)]
+pub struct CssRule {
     selectors: Vec<String>,
     declarations: Vec<CssDeclaration>
 }
 
 impl CssRule {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             selectors: Vec::new(),
             declarations: Vec::new()
         }
     }
 
-    fn add_selector(&mut self, selector: &str) {
+    pub fn add_selector(&mut self, selector: &str) {
         self.selectors.push(selector.to_string());
     }
 
-    fn add_declaration(&mut self, declaration: CssDeclaration) {
+    pub fn add_declaration(&mut self, declaration: CssDeclaration) {
         self.declarations.push(declaration);
     }
 
@@ -85,78 +87,23 @@ impl CssRule {
     }
 }
 
-struct CssStylesheet {
+#[derive(Clone, Debug)]
+pub struct CssStylesheet {
     rules: Vec<CssRule>
 }
 
-impl CssStylesheet {
+impl gosub_shared::traits::css_system::CssStylesheet for CssStylesheet {
     fn new() -> Self {
         Self {
             rules: Vec::new()
         }
     }
 
-    /// Parse a CSS stylesheet. Will generate a mock stylesheet for now:
-    ///
-    /// ```css
-    /// body {
-    ///    color: red;
-    /// }
-    ///
-    /// h1 {
-    ///     border: 1px solid black;
-    /// }
-    /// ```
-    pub fn parse(_input: &str) -> Self {
-        let mut stylesheet = CssStylesheet::new();
-
-        let mut rule = CssRule::new();
-        rule.selectors.push("body".to_string());
-        rule.declarations.push(CssDeclaration::new(
-            "color",
-            CssValue::ColorValue("red".into()),
-            false
-        ));
-        stylesheet.add_rule(rule);
-
-        let mut rule = CssRule::new();
-        rule.add_selector("h1");
-        rule.add_declaration(CssDeclaration::new(
-            "border",
-            CssValue::List(vec![
-                CssValue::Unit(1.0, "px".to_string()),
-                CssValue::Keyword("solid".to_string()),
-                CssValue::ColorValue("black".to_string())
-            ]),
-            false
-        ));
-        rule.add_declaration(CssDeclaration::new(
-            "border-width",
-            CssValue::Unit(1.0, "px".to_string()),
-            false
-        ));
-        rule.add_declaration(CssDeclaration::new(
-            "border-style",
-            CssValue::Keyword("solid".into()),
-            false
-        ));
-        rule.add_declaration(CssDeclaration::new(
-            "border-color",
-            CssValue::ColorValue("black".into()),
-            false
-        ));
-        stylesheet.add_rule(rule);
-
-        stylesheet
-    }
-
     fn add_rule(&mut self, rule: CssRule) {
         self.rules.push(rule);
     }
 
-    pub fn rules(&self) -> &Vec<CssRule> {
-        &self.rules
-    }
+    fn rules(&self) -> &Vec<CssRule> { &self.rules }
 }
 
 

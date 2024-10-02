@@ -9,6 +9,8 @@ use crate::node::node_impl::Node;
 pub struct MyDocument<C: HasCssSystem> {
     arena: NodeArena<Node>,
     url: String,
+
+    stylesheets: Vec<C::CssSystem>,
     _marker: std::marker::PhantomData<C>,
 }
 
@@ -23,6 +25,7 @@ impl<C: HasCssSystem> Document<C> for MyDocument<C> {
         let mut doc = Self {
             arena: NodeArena::new(),
             url: url.into(),
+            stylesheets: Vec::new(),
             _marker: std::marker::PhantomData,
         };
 

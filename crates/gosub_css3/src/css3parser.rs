@@ -1,7 +1,6 @@
 use gosub_shared::traits::css_system::CssStylesheet as _;
 use gosub_shared::traits::css_system::CssDeclaration as _;
 use gosub_shared::traits::css_system::CssRule as _;
-use gosub_shared::traits::css_system::CssStylesheet as _;
 use gosub_shared::traits::css_system::CssParser;
 use gosub_shared::traits::css_system::HasCssSystem;
 use crate::stylesheet::{CssDeclaration, CssValue};

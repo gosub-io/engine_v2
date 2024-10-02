@@ -38,10 +38,10 @@ impl Display for CssValue {
 }
 
 impl css_traits::HasCssSystem for CssDeclaration {
-    type CssStylesheet = Self::CssStylesheet;
-    type CssRule = Self::CssRule;
-    type CssDeclaration = Self::CssDeclaration;
-    type CssValue = Self::CssValue;
+    type CssStylesheet = CssStylesheet;
+    type CssRule = CssRule;
+    type CssDeclaration = CssDeclaration;
+    type CssValue = CssValue;
 }
 
 impl css_traits::CssDeclaration for CssDeclaration {
@@ -74,10 +74,10 @@ pub struct CssRule {
 }
 
 impl css_traits::HasCssSystem for CssRule {
-    type CssStylesheet = Self::CssStylesheet;
-    type CssRule = Self::CssRule;
-    type CssDeclaration = Self::CssDeclaration;
-    type CssValue = Self::CssValue;
+    type CssStylesheet = CssStylesheet;
+    type CssRule = CssRule;
+    type CssDeclaration = CssDeclaration;
+    type CssValue = CssValue;
 }
 
 impl css_traits::CssRule for CssRule {
@@ -113,10 +113,10 @@ pub struct CssStylesheet {
 }
 
 impl css_traits::HasCssSystem for CssStylesheet {
-    type CssStylesheet = Self::CssStylesheet;
-    type CssRule = Self::CssRule;
-    type CssDeclaration = Self::CssDeclaration;
-    type CssValue = Self::CssValue;
+    type CssStylesheet = CssStylesheet;
+    type CssRule = CssRule;
+    type CssDeclaration = CssDeclaration;
+    type CssValue = CssValue;
 }
 
 impl css_traits::CssStylesheet for CssStylesheet {
@@ -138,6 +138,8 @@ impl css_traits::CssStylesheet for CssStylesheet {
 
 #[cfg(test)]
 mod tests {
+    use gosub_shared::traits::css_system::CssDeclaration as _;
+    use gosub_shared::traits::css_system::CssRule as _;
     use super::*;
 
     #[test]
@@ -161,7 +163,7 @@ mod tests {
 
     #[test]
     fn test_css_declaration() {
-        let declaration = css_traits::CssDeclaration::new("color", CssValue::ColorValue("red".to_string()), false);
+        let declaration = CssDeclaration::new("color", CssValue::ColorValue("red".to_string()), false);
         assert_eq!(declaration.name(), "color");
         assert_eq!(format!("{}", declaration.value()), "red");
         assert_eq!(declaration.important(), false);
@@ -169,9 +171,9 @@ mod tests {
 
     #[test]
     fn test_css_rule() {
-        let mut rule = css_traits::CssRule::new();
+        let mut rule = CssRule::new();
         rule.add_selector("body");
-        rule.add_declaration(css_traits::CssDeclaration::new("color", CssValue::ColorValue("red".to_string()), false));
+        rule.add_declaration(CssDeclaration::new("color", CssValue::ColorValue("red".to_string()), false));
         assert_eq!(rule.selectors(), &vec!["body".to_string()]);
         assert_eq!(rule.declarations().len(), 1);
     }

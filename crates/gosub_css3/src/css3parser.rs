@@ -1,9 +1,10 @@
 use gosub_shared::traits::css_system::CssStylesheet as _;
 use gosub_shared::traits::css_system::CssDeclaration as _;
 use gosub_shared::traits::css_system::CssRule as _;
+use gosub_shared::traits::css_system::CssValue as _;
 use gosub_shared::traits::css_system::CssParser;
 use gosub_shared::traits::css_system::HasCssSystem;
-use crate::stylesheet::{CssDeclaration, CssValue};
+use crate::stylesheet::{CssDeclaration};
 
 pub struct MyCss3Parser<C: HasCssSystem> {
     parser_state: u32,  // dummy parser state
@@ -37,7 +38,7 @@ impl<C: HasCssSystem> CssParser<C> for MyCss3Parser<C> {
         rule.add_selector("body");
         rule.add_declaration(C::CssDeclaration::new(
             "color",
-            CssValue::ColorValue("red".into()),
+            C::CssValue::colorvalue("red"),
             false
         ));
         stylesheet.add_rule(rule);
@@ -46,26 +47,26 @@ impl<C: HasCssSystem> CssParser<C> for MyCss3Parser<C> {
         rule.add_selector("h1");
         rule.add_declaration(CssDeclaration::new(
             "border",
-            CssValue::List(vec![
-                CssValue::Unit(1.0, "px".to_string()),
-                CssValue::Keyword("solid".to_string()),
-                CssValue::ColorValue("black".to_string())
+            C::CssValue::list(vec![
+                C::CssValue::unit(1.0, "px"),
+                C::CssValue::keyword("solid"),
+                C::CssValue::colorvalue("black")
             ]),
             false
         ));
-        rule.add_declaration(CssDeclaration::new(
+        rule.add_declaration(C::CssDeclaration::new(
             "border-width",
-            CssValue::Unit(1.0, "px".to_string()),
+            C::CssValue::unit(1.0, "px"),
             false
         ));
-        rule.add_declaration(CssDeclaration::new(
+        rule.add_declaration(C::CssDeclaration::new(
             "border-style",
-            CssValue::Keyword("solid".into()),
+            C::CssValue::keyword("solid"),
             false
         ));
-        rule.add_declaration(CssDeclaration::new(
+        rule.add_declaration(C::CssDeclaration::new(
             "border-color",
-            CssValue::ColorValue("black".into()),
+            C::CssValue::colorvalue("black"),
             false
         ));
         stylesheet.add_rule(rule);

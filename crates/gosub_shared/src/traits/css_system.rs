@@ -17,7 +17,16 @@ pub trait CssParser<C: HasCssSystem>: Sized {
 }
 
 
-pub trait CssValue: Sized {}
+pub trait CssValue: Sized {
+    fn unit(value: f32, unit: &str) -> Self;
+    fn keyword(value: &str) -> Self;
+    fn colorvalue(value: &str) -> Self;
+    fn list(args: Vec<Self>) -> Self;
+    fn is_unit(&self) -> bool;
+    fn is_keyword(&self) -> bool;
+    fn is_color(&self) -> bool;
+    fn is_list(&self) -> bool;
+}
 
 pub trait CssDeclaration: Sized + HasCssSystem{
     // type CssValue: CssValue;

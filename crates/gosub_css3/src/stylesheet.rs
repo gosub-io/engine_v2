@@ -10,7 +10,51 @@ pub enum CssValue {
     List(Vec<CssValue>)
 }
 
-impl css_traits::CssValue for CssValue {}
+impl css_traits::CssValue for CssValue {
+    fn unit(value: f32, unit: &str) -> Self {
+        Self::Unit(value, unit.into())
+    }
+
+    fn keyword(value: &str) -> Self {
+        Self::Keyword(value.into())
+    }
+
+    fn colorvalue(value: &str) -> Self {
+        Self::ColorValue(value.into())
+    }
+
+    fn list(args: Vec<Self>) -> Self {
+        Self::List(args)
+    }
+
+    fn is_unit(&self) -> bool {
+        match self {
+            CssValue::Unit(_, _) => true,
+            _ => false
+        }
+    }
+
+    fn is_keyword(&self) -> bool {
+        match self {
+            CssValue::Keyword(_) => true,
+            _ => false
+        }
+    }
+
+    fn is_color(&self) -> bool {
+        match self {
+            CssValue::ColorValue(_) => true,
+            _ => false
+        }
+    }
+
+    fn is_list(&self) -> bool {
+        match self {
+            CssValue::List(_) => true,
+            _ => false
+        }
+    }
+}
 
 #[derive(Clone, Debug)]
 pub struct CssDeclaration {

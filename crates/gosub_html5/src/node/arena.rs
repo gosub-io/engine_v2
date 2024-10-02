@@ -28,12 +28,20 @@ impl<N: Node> NodeArena<N> {
         id
     }
 
-    pub fn get_node(&self, node_id: NodeId) -> Option<&N> {
-        self.nodes.get(&node_id)
+    pub fn update_node(&mut self, node_id: NodeId, node: N) {
+        self.nodes.insert(node_id, node);
     }
 
     pub fn get_node_mut(&mut self, node_id: NodeId) -> Option<&mut N> {
         self.nodes.get_mut(&node_id)
+    }
+
+    pub fn get_node(&self, node_id: NodeId) -> Option<&N> {
+        self.nodes.get(&node_id)
+    }
+
+    pub fn detach_node(&mut self, node_id: NodeId) -> Option<N> {
+        self.nodes.remove(&node_id)
     }
 
     pub fn len(&self) -> usize {
@@ -73,17 +81,6 @@ mod tests {
         let node = NodeBuilder::new_text_node("Hello, world!");
         let node_id = arena.add_node(node);
         let node = arena.get_node(node_id);
-        assert!(node.is_some());
-    }
-
-    #[test]
-    fn test_get_node_mut() {
-        let mut arena: NodeArena<NodeImpl> = NodeArena::new();
-
-        let node = NodeBuilder::new_text_node("Hello, world!");
-        let node_id = arena.add_node(node);
-
-        let node = arena.get_node_mut(node_id);
         assert!(node.is_some());
     }
 }

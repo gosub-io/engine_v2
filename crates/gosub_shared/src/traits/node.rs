@@ -15,7 +15,7 @@ pub trait ElementData {
     fn new(name: &str, namespace: &str) -> Self;
     fn name(&self) -> &str;
     fn namespace(&self) -> &str;
-    fn attributes(&self) -> &Vec<impl ElementAttribute>;
+    fn attributes(&self) -> &HashMap<String, String>;
     fn add_attribute(&mut self, name: &str, value: &str);
     fn remove_attribute(&mut self, name: &str);
     fn classes(&self) -> &HashMap<String, bool>;
@@ -66,6 +66,7 @@ where
     fn children(&self) -> &Vec<NodeId>;
     fn add_child_at_position(&mut self, id: NodeId, position: Option<usize>);
 
+    fn get_element_data_mut(&mut self) -> Option<&mut Self::ElementData>;
     fn get_element_data(&self) -> Option<&Self::ElementData>;
     fn get_text_data(&self) -> Option<&Self::TextData>;
     fn get_comment_data(&self) -> Option<&Self::CommentData>;

@@ -1,8 +1,9 @@
 use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::css_system::{CssSystem, HasCssSystem};
 use gosub_shared::traits::document::{Document};
-use gosub_shared::traits::node::{Node as _};
+use gosub_shared::traits::node::{Node as _, NodeBuilder as _};
 use crate::node::arena::NodeArena;
+use crate::node::builder::NodeBuilder;
 use crate::node::node_impl::Node;
 
 pub struct MyDocument<C: HasCssSystem> {
@@ -11,56 +12,25 @@ pub struct MyDocument<C: HasCssSystem> {
     _marker: std::marker::PhantomData<C>,
 }
 
-// impl<C: HasCssSystem> HasDocument for MyDocument<C> {
-//     type Document = MyDocument<C::CssSystem>;
-//     type Node = Node;
-// }
-
-
-// impl<C: HasCssSystem> Document<MyDocument<C>> for MyDocument<C> {
-//     fn do_doc_things_with_css(&self, css: Self::CssSystem) {
-//         todo!()
-//     }
-//     fn do_document_things(&self) {
-//         todo!()
-//     }
-//     fn get_node(&self, id: NodeId) -> Option<&Self::Node> {
-//         todo!()
-//     }
-//     fn get_node_mut(&mut self, id: NodeId) -> Option<&mut Self::Node> {
-//         todo!()
-//     }
-//     fn get_root_node(&self) -> Option<&Self::Node> {
-//         todo!()
-//     }
-//     fn new(url: &str) -> Self {
-//         todo!()
-//     }
-//     fn register_node_at(&mut self, node: Self::Node, parent_id: NodeId, position: Option<usize>) -> NodeId {
-//         todo!()
-//     }
-//
-//
-// }
-
 impl<C: HasCssSystem> HasCssSystem for MyDocument<C> {
     type CssSystem = C::CssSystem;
 }
-
-// impl<C: HasCssSystem> HasNode for MyDocument<C> {
-//     type Node = Node;
-//     // type NodeBuilder = NodeBuilder<Self::Node>;
-// }
 
 impl<C: HasCssSystem> Document<C> for MyDocument<C> {
     type Node = Node;
 
     fn new(url: &str) -> Self {
-        Self {
+        let mut doc = Self {
             arena: NodeArena::new(),
             url: url.into(),
             _marker: std::marker::PhantomData,
-        }
+        };
+
+        // Create initial root node
+        let root_node = NodeBuilder::new_document_node();
+        doc.arena.add_node(root_node);
+
+        doc
     }
 
     fn register_node_at(&mut self, node: Self::Node, parent_id: NodeId, position: Option<usize>) -> NodeId {

@@ -27,12 +27,17 @@ impl<C: HasDocument> DocumentWalker<C> {
 
     fn print_element(&self, node: &C::Node, prefix: String, last: bool, f: &mut impl Write) {
         let mut buffer = prefix.clone();
-        if last {
-            buffer.push_str("└─ ");
-        } else {
-            buffer.push_str("├─ ");
+        if buffer != "" {
+            if last {
+                buffer.push_str("└─ ");
+            } else {
+                buffer.push_str("├─ ");
+            }
         }
 
+        if let Some(_) = node.get_document_data() {
+            writeln!(f, "{}<!DOCTYPE html>", buffer).unwrap();
+        }
         if let Some(data) = node.get_doctype_data() {
             let pid = if data.public_id().is_empty() { "" } else { &format!(" PUBLIC \"{}\"", data.public_id()).to_string() };
             let sid = if data.system_id().is_empty() { "" } else { &format!("\"{}\"", data.system_id()).to_string() };
@@ -50,7 +55,13 @@ impl<C: HasDocument> DocumentWalker<C> {
                 let last = i == data.attributes().len() - 1;
                 writeln!(f, "{}    {}{}", buffer, attr, if last { "" } else { "," }).unwrap();
             }
-            writeln!(f, "{}Element", buffer).unwrap();
+        }
+
+        let mut buffer = prefix;
+        if last {
+            buffer.push_str("   ");
+        } else {
+            buffer.push_str("│  ");
         }
 
         for (i, child) in node.children().iter().enumerate() {
@@ -58,7 +69,7 @@ impl<C: HasDocument> DocumentWalker<C> {
             let child = binding.get_node(*child);
 
             let last = i == node.children().len() - 1;
-            self.print_element(child.unwrap(), format!("{}{}", prefix, if last { "    " } else { "│   " }), last, f);
+            self.print_element(child.unwrap(), buffer.clone(), last, f);
         }
     }
 }

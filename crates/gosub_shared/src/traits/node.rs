@@ -42,15 +42,20 @@ pub trait DocTypeData {
     fn system_id(&self) -> &str;
 }
 
+pub trait DocumentData {
+    fn new() -> Self;
+}
+
 pub trait Node: Sized
 where
-    Self::NodeData: From<Self::ElementData> + From<Self::CommentData> + From<Self::TextData> + From<Self::DocTypeData>
+    Self::NodeData: From<Self::ElementData> + From<Self::CommentData> + From<Self::TextData> + From<Self::DocTypeData> + From<Self::DocumentData>
 {
     type NodeData: NodeData;
     type ElementData: ElementData;
     type TextData: TextData;
     type CommentData: CommentData;
     type DocTypeData: DocTypeData;
+    type DocumentData: DocumentData;
 
     fn new(data: Self::NodeData) -> Self;
     fn id(&self) -> Option<NodeId>;
@@ -65,6 +70,7 @@ where
     fn get_text_data(&self) -> Option<&Self::TextData>;
     fn get_comment_data(&self) -> Option<&Self::CommentData>;
     fn get_doctype_data(&self) -> Option<&Self::DocTypeData>;
+    fn get_document_data(&self) -> Option<&Self::DocumentData>;
 }
 
 pub trait NodeBuilder<N: Node>: Sized {
@@ -72,6 +78,7 @@ pub trait NodeBuilder<N: Node>: Sized {
     fn new_text_node(content: &str) -> N;
     fn new_comment_node(content: &str) -> N;
     fn new_doctype_node(name: &str, public_id: &str, system_id: &str) -> N;
+    fn new_document_node() -> N;
 }
 
 // pub trait HasNode: Sized {

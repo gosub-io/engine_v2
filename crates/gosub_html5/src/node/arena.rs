@@ -43,6 +43,7 @@ impl<N: Node> NodeArena<N> {
 
 #[cfg(test)]
 mod tests {
+    use gosub_shared::traits::node::NodeBuilder as _;
     use super::*;
     use crate::node::builder::NodeBuilder;
     use crate::node::node_impl::Node as NodeImpl;

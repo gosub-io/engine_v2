@@ -118,9 +118,12 @@ impl gosub_shared::traits::css_system::CssStylesheet for CssStylesheet {
 
 #[cfg(test)]
 mod tests {
-    use gosub_shared::traits::css_system::CssParser;
-use gosub_shared::traits::css_system::{CssDeclaration, CssRule};
     use super::*;
+    use crate::parser::CssParser;
+    use gosub_shared::traits::css_system::CssParser as _;
+    use gosub_shared::traits::css_system::CssDeclaration as _;
+    use gosub_shared::traits::css_system::CssRule as _;
+    use gosub_shared::traits::css_system::CssStylesheet as _;
 
     #[test]
     fn test_css_value_display() {

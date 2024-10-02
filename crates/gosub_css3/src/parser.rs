@@ -1,10 +1,9 @@
-use gosub_shared::traits::css_system::CssStylesheet as CssStylesheetTrait;
-use crate::MyCssSystem;
+use gosub_shared::traits::css_system::{CssDeclaration as _ , CssRule as _, CssStylesheet as _ };
 use crate::stylesheet::{CssDeclaration, CssRule, CssStylesheet, CssValue};
 
-struct CssParser;
+pub struct CssParser;
 
-impl gosub_shared::traits::css_system::CssParser for MyCssSystem {
+impl gosub_shared::traits::css_system::CssParser for CssParser {
     type CssStylesheet = CssStylesheet;
 
     /// Parse a CSS stylesheet. Will generate a mock stylesheet for now:
@@ -18,12 +17,12 @@ impl gosub_shared::traits::css_system::CssParser for MyCssSystem {
     ///     border: 1px solid black;
     /// }
     /// ```
-    fn parse(_input: &str) -> Self::CssStylesheet {
+    fn parse_str(_input: &str) -> Self::CssStylesheet {
         let mut stylesheet = CssStylesheet::new();
 
-        let mut rule = CssRule::new();
-        rule.selectors.push("body".to_string());
-        rule.declarations.push(CssDeclaration::new(
+        let rule = CssRule::new();
+        rule.add_selector("body");
+        rule.add_declaration(CssDeclaration::new(
             "color",
             CssValue::ColorValue("red".into()),
             false

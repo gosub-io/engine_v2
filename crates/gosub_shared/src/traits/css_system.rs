@@ -34,5 +34,5 @@ pub trait CssStylesheet: Sized {
 pub trait CssParser: Sized {
     type CssStylesheet: CssStylesheet;
 
-    fn parse(input: &str) -> Self::CssStylesheet;
+    fn parse_str(input: &str) -> Self::CssStylesheet;
 }

@@ -6,6 +6,7 @@ use crate::node::node_data::doctype::DocTypeData;
 use crate::node::node_data::document::DocumentData;
 use crate::node::node_data::element::ElementData;
 use crate::node::node_data::text::TextData;
+use crate::node::node_impl;
 
 #[derive(Debug, Clone)]
 pub struct Node {
@@ -21,7 +22,7 @@ pub struct Node {
 
 impl NodeTrait for Node
 where
-    NodeData: From<ElementData> + From<CommentData> + From<TextData> + From<DocTypeData>  + From<DocumentData>
+    NodeData: From<node_impl::ElementData> + From<node_impl::CommentData> + From<node_impl::TextData> + From<node_impl::DocTypeData>  + From<node_impl::DocumentData>
 {
     type NodeData = NodeData;
     type ElementData = ElementData;
@@ -58,7 +59,6 @@ where
     }
 
     fn add_child_at_position(&mut self, id: NodeId, position: Option<usize>) {
-        println!("I'm node: {:?}, adding child {:?} at position: {:?}", self.id, id, position);
         match position {
             Some(position) => {
                 if position >= self.children.len() {
@@ -70,6 +70,13 @@ where
             None => {
                 self.children.push(id);
             },
+        }
+    }
+
+    fn get_element_data_mut(&mut self) -> Option<&mut Self::ElementData> {
+        match self.data {
+            NodeData::Element(ref mut data) => Some(data),
+            _ => None,
         }
     }
 

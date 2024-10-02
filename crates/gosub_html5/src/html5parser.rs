@@ -3,7 +3,7 @@ use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::document::HasDocument;
 use gosub_shared::traits::document::Document;
 use gosub_shared::traits::html5_parser::{HtmlParser};
-use gosub_shared::traits::node::NodeBuilder as _;
+use gosub_shared::traits::node::{NodeBuilder as _};
 use crate::node::builder::NodeBuilder;
 
 pub struct MyHtmlParser<C: HasDocument> {
@@ -19,8 +19,7 @@ impl<C: HasDocument> HtmlParser<C> for MyHtmlParser<C> {
         }
     }
 
-    fn parse_str(&mut self, input: &str) {
-        println!("Parsing string: {}", input);
+    fn parse_str(&mut self, _input: &str) {
         self.parser_state = 1;
 
         /*

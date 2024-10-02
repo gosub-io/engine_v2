@@ -1,5 +1,5 @@
 use gosub_shared::node_id::NodeId;
-use gosub_shared::traits::css_system::{CssSystem, HasCssSystem};
+use gosub_shared::traits::css_system::HasCssSystem;
 use gosub_shared::traits::document::{Document};
 use gosub_shared::traits::node::{Node as _, NodeBuilder as _};
 use crate::node::arena::NodeArena;
@@ -37,7 +37,9 @@ impl<C: HasCssSystem> Document<C> for MyDocument<C> {
         let node_id = self.arena.add_node(node);
 
         // Update the parent node to make sure the nodeid is added to the parent
-        self.arena.get_node_mut(parent_id).unwrap().add_child_at_position(node_id, position);
+        let mut parent_node = self.arena.detach_node(parent_id).unwrap();
+        parent_node.add_child_at_position(node_id, position);
+        self.arena.update_node(parent_id, parent_node);
 
         node_id
     }
@@ -50,16 +52,16 @@ impl<C: HasCssSystem> Document<C> for MyDocument<C> {
         self.arena.get_node(id)
     }
 
-    fn get_node_mut(&mut self, id: NodeId) -> Option<&mut Self::Node> {
-        self.arena.get_node_mut(id)
+    fn update_node(&mut self, id: NodeId, node: Self::Node) {
+        self.arena.update_node(id, node);
     }
 
-    fn do_doc_things_with_css(&self, css: C::CssSystem) {
-        css.do_css_things();
+    fn detach_node(&mut self, id: NodeId) -> Option<Self::Node> {
+        self.arena.detach_node(id)
     }
 
-    fn do_document_things(&self) {
-        todo!()
+    fn attach_node(&mut self, id: NodeId, node: Self::Node) {
+        self.arena.update_node(id, node);
     }
 
     fn get_url(&self) -> &str {

@@ -66,6 +66,7 @@ where
     fn children(&self) -> &Vec<NodeId>;
     fn add_child_at_position(&mut self, id: NodeId, position: Option<usize>);
 
+    fn get_element_data_mut(&mut self) -> Option<&mut Self::ElementData>;
     fn get_element_data(&self) -> Option<&Self::ElementData>;
     fn get_text_data(&self) -> Option<&Self::TextData>;
     fn get_comment_data(&self) -> Option<&Self::CommentData>;

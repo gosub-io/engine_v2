@@ -16,10 +16,6 @@ members = [
 ]
 
 [[bin]]
-name = "gosub-user-agent"
-path = "src/useragent.rs"
-
-[[bin]]
 name = "gosub-text-user-agent"
 path = "src/text-useragent.rs"
 

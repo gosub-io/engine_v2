@@ -1,4 +1,4 @@
-use gosub_shared::traits::document::{Document, HasDocument};
+use gosub_shared::traits::document::HasDocument;
 use gosub_shared::traits::render_tree::{RenderTree};
 
 pub struct MyRenderTree<C: HasDocument> {
@@ -6,8 +6,7 @@ pub struct MyRenderTree<C: HasDocument> {
 }
 
 impl<C: HasDocument> RenderTree<C> for MyRenderTree<C> {
-    fn do_render_tree_things(&self, doc: &C::Document) {
-        doc.do_document_things();
+    fn do_render_tree_things(&self, _doc: &C::Document) {
         println!("Doing render tree things");
     }
 

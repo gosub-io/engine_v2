@@ -62,7 +62,6 @@ impl gosub_shared::traits::node::ElementData for ElementData {
     fn add_attribute(&mut self, name: &str, value: &str) {
         self.attributes.push(ElementAttribute { name: name.into(), value: value.into() });
 
-        // @todo: do things with "class" and "id"
         if name == "class" {
             for class in value.split_whitespace() {
                 self.classes.insert(class.to_string(), true);

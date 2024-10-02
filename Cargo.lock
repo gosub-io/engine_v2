@@ -532,6 +532,7 @@ dependencies = [
 name = "gosub_html5"
 version = "0.1.0"
 dependencies = [
+ "criterion",
  "derive_more 1.0.0",
  "gosub_css3",
  "gosub_shared",

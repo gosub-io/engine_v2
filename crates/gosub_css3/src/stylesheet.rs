@@ -1,6 +1,6 @@
 use std::fmt;
 use std::fmt::{Display, Formatter};
-use gosub_shared::traits::css_system::HasCssSystem;
+use gosub_shared::traits::css_system as css_traits;
 
 #[derive(Clone, Debug)]
 pub enum CssValue {
@@ -10,7 +10,7 @@ pub enum CssValue {
     List(Vec<CssValue>)
 }
 
-impl gosub_shared::traits::css_system::CssValue for CssValue {}
+impl css_traits::CssValue for CssValue {}
 
 #[derive(Clone, Debug)]
 pub struct CssDeclaration {
@@ -37,14 +37,14 @@ impl Display for CssValue {
     }
 }
 
-impl HasCssSystem for CssDeclaration {
+impl css_traits::HasCssSystem for CssDeclaration {
     type CssStylesheet = Self::CssStylesheet;
     type CssRule = Self::CssRule;
     type CssDeclaration = Self::CssDeclaration;
     type CssValue = Self::CssValue;
 }
 
-impl gosub_shared::traits::css_system::CssDeclaration for CssDeclaration {
+impl css_traits::CssDeclaration for CssDeclaration {
 
     fn new(name: &str, value: Self::CssValue, important: bool) -> Self {
         Self {
@@ -73,7 +73,14 @@ pub struct CssRule {
     declarations: Vec<CssDeclaration>
 }
 
-impl gosub_shared::traits::css_system::CssRule for CssRule {
+impl css_traits::HasCssSystem for CssRule {
+    type CssStylesheet = Self::CssStylesheet;
+    type CssRule = Self::CssRule;
+    type CssDeclaration = Self::CssDeclaration;
+    type CssValue = Self::CssValue;
+}
+
+impl css_traits::CssRule for CssRule {
     // type CssDeclaration = CssDeclaration;
 
     fn new() -> Self {
@@ -95,7 +102,6 @@ impl gosub_shared::traits::css_system::CssRule for CssRule {
         &self.selectors
     }
 
-
     fn declarations(&self) -> &Vec<Self::CssDeclaration> {
         &self.declarations
     }
@@ -106,7 +112,14 @@ pub struct CssStylesheet {
     rules: Vec<CssRule>
 }
 
-impl gosub_shared::traits::css_system::CssStylesheet for CssStylesheet {
+impl css_traits::HasCssSystem for CssStylesheet {
+    type CssStylesheet = Self::CssStylesheet;
+    type CssRule = Self::CssRule;
+    type CssDeclaration = Self::CssDeclaration;
+    type CssValue = Self::CssValue;
+}
+
+impl css_traits::CssStylesheet for CssStylesheet {
     // type CssRule = CssRule;
 
     fn new() -> Self {
@@ -126,8 +139,6 @@ impl gosub_shared::traits::css_system::CssStylesheet for CssStylesheet {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use gosub_shared::traits::css_system::{CssDeclaration as _};
-    use gosub_shared::traits::css_system::CssRule as _;
 
     #[test]
     fn test_css_value_display() {
@@ -150,7 +161,7 @@ mod tests {
 
     #[test]
     fn test_css_declaration() {
-        let declaration = CssDeclaration::new("color", CssValue::ColorValue("red".to_string()), false);
+        let declaration = css_traits::CssDeclaration::new("color", CssValue::ColorValue("red".to_string()), false);
         assert_eq!(declaration.name(), "color");
         assert_eq!(format!("{}", declaration.value()), "red");
         assert_eq!(declaration.important(), false);
@@ -158,9 +169,9 @@ mod tests {
 
     #[test]
     fn test_css_rule() {
-        let mut rule = CssRule::new();
+        let mut rule = css_traits::CssRule::new();
         rule.add_selector("body");
-        rule.add_declaration(CssDeclaration::new("color", CssValue::ColorValue("red".to_string()), false));
+        rule.add_declaration(css_traits::CssDeclaration::new("color", CssValue::ColorValue("red".to_string()), false));
         assert_eq!(rule.selectors(), &vec!["body".to_string()]);
         assert_eq!(rule.declarations().len(), 1);
     }

@@ -16,6 +16,8 @@ pub trait Document<C: HasCssSystem>: Sized {
     fn get_root_node(&self) -> Option<&Self::Node>;
     fn get_node(&self, id: NodeId) -> Option<&Self::Node>;
 
+    fn stylesheets(&self) -> &Vec<C::CssStylesheet>;
+    fn add_stylesheet(&mut self, stylesheet: C::CssStylesheet);
 
     fn detach_node(&mut self, id: NodeId) -> Option<Self::Node>;
     fn attach_node(&mut self, id: NodeId, node: Self::Node);

@@ -18,14 +18,14 @@ impl<C: HasDocument> DocumentWalker<C> {
         }
     }
 
-    pub fn print_tree(&self, doc_handle: DocumentHandle<C>) {
+    pub fn print_tree(&self, doc_handle: DocumentHandle<C>, with_node_ids: bool) {
         let document = doc_handle.get();
         if let Some(root_node) = document.get_root_node() {
-            self.print_element(root_node, "".to_string(), true, &mut std::io::stdout());
+            self.print_element(root_node, "".to_string(), true, with_node_ids, &mut std::io::stdout());
         }
     }
 
-    fn print_element(&self, node: &C::Node, prefix: String, last: bool, f: &mut impl Write) {
+    fn print_element(&self, node: &C::Node, prefix: String, last: bool, with_node_ids: bool, f: &mut impl Write) {
         let mut buffer = prefix.clone();
         if buffer != "" {
             if last {
@@ -33,6 +33,10 @@ impl<C: HasDocument> DocumentWalker<C> {
             } else {
                 buffer.push_str("├─ ");
             }
+        }
+
+        if with_node_ids {
+            buffer = format!("({}) {}", node.id().unwrap().id(), buffer);
         }
 
         if let Some(_) = node.get_document_data() {
@@ -69,7 +73,7 @@ impl<C: HasDocument> DocumentWalker<C> {
             let child = binding.get_node(*child);
 
             let last = i == node.children().len() - 1;
-            self.print_element(child.unwrap(), buffer.clone(), last, f);
+            self.print_element(child.unwrap(), buffer.clone(), last, with_node_ids, f);
         }
     }
 }

@@ -1,4 +1,4 @@
-use crate::traits::css_system::HasCssSystem;
+use crate::traits::css_system::{HasCssParser, HasCssSystem};
 use crate::traits::document::HasDocument;
 use crate::traits::html5_parser::HasHtmlParser;
 use crate::traits::layouter::HasLayouter;
@@ -10,6 +10,7 @@ pub trait ModuleConfiguration:
     Sized
     + HasCssSystem
     + HasDocument
+    + HasCssParser
     + HasHtmlParser
     + HasLayouter
     + HasRenderTree

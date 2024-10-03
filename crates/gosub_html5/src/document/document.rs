@@ -9,11 +9,16 @@ use crate::node::node_impl::Node;
 pub struct MyDocument<C: HasCssSystem> {
     arena: NodeArena<Node>,
     url: String,
+
+    stylesheets: Vec<C::CssStylesheet>,
     _marker: std::marker::PhantomData<C>,
 }
 
 impl<C: HasCssSystem> HasCssSystem for MyDocument<C> {
-    type CssSystem = C::CssSystem;
+    type CssStylesheet = C::CssStylesheet;
+    type CssRule = C::CssRule;
+    type CssDeclaration = C::CssDeclaration;
+    type CssValue = C::CssValue;
 }
 
 impl<C: HasCssSystem> Document<C> for MyDocument<C> {
@@ -23,6 +28,7 @@ impl<C: HasCssSystem> Document<C> for MyDocument<C> {
         let mut doc = Self {
             arena: NodeArena::new(),
             url: url.into(),
+            stylesheets: Vec::new(),
             _marker: std::marker::PhantomData,
         };
 
@@ -74,5 +80,13 @@ impl<C: HasCssSystem> Document<C> for MyDocument<C> {
 
     fn get_url(&self) -> &str {
         self.url.as_str()
+    }
+
+    fn stylesheets(&self) -> &Vec<C::CssStylesheet> {
+        &self.stylesheets
+    }
+
+    fn add_stylesheet(&mut self, stylesheet: C::CssStylesheet) {
+        self.stylesheets.push(stylesheet);
     }
 }

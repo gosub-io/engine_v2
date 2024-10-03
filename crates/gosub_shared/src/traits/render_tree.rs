@@ -1,3 +1,4 @@
+use crate::document::DocumentHandle;
 use crate::traits::document::HasDocument;
 
 pub trait HasRenderTree: Sized + HasDocument {
@@ -5,7 +6,5 @@ pub trait HasRenderTree: Sized + HasDocument {
 }
 
 pub trait RenderTree<C: HasDocument>: Sized {
-    fn do_render_tree_things(&self, doc: &C::Document);
-
-    fn new() -> Self;
+    fn from_document(handle: DocumentHandle<C>) -> Self;
 }

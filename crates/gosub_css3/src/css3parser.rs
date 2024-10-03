@@ -45,7 +45,7 @@ impl<C: HasCssSystem> CssParser<C> for MyCss3Parser<C> {
 
         let mut rule = C::CssRule::new();
         rule.add_selector("h1");
-        rule.add_declaration(CssDeclaration::new(
+        rule.add_declaration(C::CssDeclaration::new(
             "border",
             C::CssValue::list(vec![
                 C::CssValue::unit(1.0, "px"),

@@ -10,12 +10,15 @@ pub struct MyDocument<C: HasCssSystem> {
     arena: NodeArena<Node>,
     url: String,
 
-    stylesheets: Vec<C::CssSystem>,
+    stylesheets: Vec<C::CssStylesheet>,
     _marker: std::marker::PhantomData<C>,
 }
 
 impl<C: HasCssSystem> HasCssSystem for MyDocument<C> {
-    type CssSystem = C::CssSystem;
+    type CssStylesheet = C::CssStylesheet;
+    type CssRule = C::CssRule;
+    type CssDeclaration = C::CssDeclaration;
+    type CssValue = C::CssValue;
 }
 
 impl<C: HasCssSystem> Document<C> for MyDocument<C> {

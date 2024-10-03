@@ -1,3 +1,4 @@
+use gosub_css3::css3parser::MyCss3Parser;
 use gosub_css3::MyCssSystem;
 use gosub_html5::document::builder::DocumentBuilder;
 use gosub_html5::document::document::MyDocument;
@@ -7,7 +8,7 @@ use gosub_renderer::backend::MyRenderBackend;
 use gosub_renderer::layouter::MyLayouter;
 use gosub_renderer::render_tree::MyRenderTree;
 use gosub_renderer::tree_drawer::MyTreeDrawer;
-use gosub_shared::traits::css_system::{HasCssSystem};
+use gosub_shared::traits::css_system::{HasCssParser, HasCssSystem};
 use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::html5_parser::{HasHtmlParser, HtmlParser};
 use gosub_shared::traits::layouter::{HasLayouter};
@@ -20,7 +21,11 @@ use gosub_shared::traits::tree_drawer::{HasTreeDrawer};
 struct MyModuleConfiguration;
 
 impl HasCssSystem for MyModuleConfiguration {
-    type CssSystem = MyCssSystem;
+    // type CssSystem = MyCssSystem;
+    type CssStylesheet = <MyCssSystem as HasCssSystem>::CssStylesheet;
+    type CssRule = <MyCssSystem as HasCssSystem>::CssRule;
+    type CssDeclaration = <MyCssSystem as HasCssSystem>::CssDeclaration;
+    type CssValue = <MyCssSystem as HasCssSystem>::CssValue;
 }
 
 impl HasDocument for MyModuleConfiguration {
@@ -47,6 +52,8 @@ impl HasTreeDrawer for MyModuleConfiguration {
 impl HasRenderBackend for MyModuleConfiguration {
     type RenderBackend = MyRenderBackend;
 }
+
+impl HasCssParser for MyModuleConfiguration { type CssParser = MyCss3Parser<Self>; }
 
 impl ModuleConfiguration for MyModuleConfiguration {}
 

@@ -1,9 +1,9 @@
 use crate::traits::document::HasDocument;
 
 pub trait HasCssSystem: Sized {
-    type CssStylesheet: CssStylesheet;
-    type CssRule: CssRule;
-    type CssDeclaration: CssDeclaration;
+    type CssStylesheet: CssStylesheet<CssStylesheet = Self::CssStylesheet, CssRule = Self::CssRule, CssDeclaration = Self::CssDeclaration, CssValue = Self::CssValue>;
+    type CssRule: CssRule<CssStylesheet = Self::CssStylesheet, CssRule = Self::CssRule, CssDeclaration = Self::CssDeclaration, CssValue = Self::CssValue>;
+    type CssDeclaration: CssDeclaration<CssStylesheet = Self::CssStylesheet, CssRule = Self::CssRule, CssDeclaration = Self::CssDeclaration, CssValue = Self::CssValue>;
     type CssValue: CssValue;
 }
 
@@ -37,7 +37,7 @@ pub trait CssDeclaration: Sized + HasCssSystem{
     fn important(&self) -> bool;
 }
 
-pub trait CssRule: Sized + HasCssSystem{
+pub trait CssRule: Sized + HasCssSystem {
     // type CssDeclaration: CssDeclaration;
 
     fn new() -> Self;

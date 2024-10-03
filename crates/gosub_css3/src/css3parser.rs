@@ -4,10 +4,10 @@ use gosub_shared::traits::css_system::CssRule as _;
 use gosub_shared::traits::css_system::CssValue as _;
 use gosub_shared::traits::css_system::CssParser;
 use gosub_shared::traits::css_system::HasCssSystem;
-use crate::stylesheet::{CssDeclaration};
 
 pub struct MyCss3Parser<C: HasCssSystem> {
-    parser_state: u32,  // dummy parser state
+    /// dummy parser state
+    parser_state: u32,
     _marker: std::marker::PhantomData<C>,
 }
 
@@ -33,6 +33,9 @@ impl<C: HasCssSystem> CssParser<C> for MyCss3Parser<C> {
     /// ```
     fn parse_str(&mut self, _input: &str) -> C::CssStylesheet {
         let mut stylesheet = C::CssStylesheet::new();
+
+        // Update some mock internal state
+        self.parser_state += 1;
 
         let mut rule = C::CssRule::new();
         rule.add_selector("body");

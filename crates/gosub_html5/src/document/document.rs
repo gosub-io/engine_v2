@@ -81,4 +81,12 @@ impl<C: HasCssSystem> Document<C> for MyDocument<C> {
     fn get_url(&self) -> &str {
         self.url.as_str()
     }
+
+    fn stylesheets(&self) -> &Vec<C::CssStylesheet> {
+        &self.stylesheets
+    }
+
+    fn add_stylesheet(&mut self, stylesheet: C::CssStylesheet) {
+        self.stylesheets.push(stylesheet);
+    }
 }

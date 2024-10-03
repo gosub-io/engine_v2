@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use crate::traits::document::HasDocument;
 
 pub trait HasCssSystem: Sized {
@@ -17,7 +18,7 @@ pub trait CssParser<C: HasCssSystem>: Sized {
 }
 
 
-pub trait CssValue: Sized {
+pub trait CssValue: Sized + Debug {
     fn unit(value: f32, unit: &str) -> Self;
     fn keyword(value: &str) -> Self;
     fn colorvalue(value: &str) -> Self;
@@ -28,16 +29,16 @@ pub trait CssValue: Sized {
     fn is_list(&self) -> bool;
 }
 
-pub trait CssDeclaration: Sized + HasCssSystem{
+pub trait CssDeclaration: Sized + HasCssSystem + Debug {
     // type CssValue: CssValue;
 
     fn new(name: &str, value: Self::CssValue, important: bool) -> Self;
     fn name(&self) -> &str;
-    fn value(&self) -> &Self::CssValue;
+    fn value(&self) -> Self::CssValue;
     fn important(&self) -> bool;
 }
 
-pub trait CssRule: Sized + HasCssSystem {
+pub trait CssRule: Sized + HasCssSystem + Debug {
     // type CssDeclaration: CssDeclaration;
 
     fn new() -> Self;
@@ -47,7 +48,7 @@ pub trait CssRule: Sized + HasCssSystem {
     fn declarations(&self) -> &Vec<Self::CssDeclaration>;
 }
 
-pub trait CssStylesheet: Sized + HasCssSystem{
+pub trait CssStylesheet: Sized + HasCssSystem + Debug {
     // type CssRule: CssRule;
 
     fn new() -> Self;

@@ -2,13 +2,24 @@ use std::fmt;
 use std::fmt::{Display, Formatter};
 use gosub_shared::traits::css_system as css_traits;
 
-#[derive(Clone, Debug)]
+#[derive(Debug, Clone)]
 pub enum CssValue {
     Unit(f32, String),
     Keyword(String),
     ColorValue(String),
     List(Vec<CssValue>)
 }
+
+// impl Clone for CssValue {
+//     fn clone(&self) -> Self {
+//         match self {
+//             CssValue::Unit(value, unit) => CssValue::Unit(*value, unit.clone()),
+//             CssValue::Keyword(value) => CssValue::Keyword(value.clone()),
+//             CssValue::ColorValue(value) => CssValue::ColorValue(value.clone()),
+//             CssValue::List(args) => CssValue::List(args.clone())
+//         }
+//     }
+// }
 
 impl css_traits::CssValue for CssValue {
     fn unit(value: f32, unit: &str) -> Self {
@@ -102,8 +113,8 @@ impl css_traits::CssDeclaration for CssDeclaration {
         &self.name
     }
 
-    fn value(&self) -> &CssValue {
-        &self.value
+    fn value(&self) -> CssValue {
+        self.value.clone()
     }
 
     fn important(&self) -> bool {

@@ -64,6 +64,7 @@ where
     fn register(&mut self, id: NodeId);
 
     fn children(&self) -> &Vec<NodeId>;
+    fn is_renderable(&self) -> bool;
     fn add_child_at_position(&mut self, id: NodeId, position: Option<usize>);
 
     fn get_element_data_mut(&mut self) -> Option<&mut Self::ElementData>;
@@ -81,8 +82,3 @@ pub trait NodeBuilder<N: Node>: Sized {
     fn new_doctype_node(name: &str, public_id: &str, system_id: &str) -> N;
     fn new_document_node() -> N;
 }
-
-// pub trait HasNode: Sized {
-//     type Node: Node;
-//     // type NodeBuilder: NodeBuilder<Self::Node>;
-// }

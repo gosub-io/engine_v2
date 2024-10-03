@@ -70,6 +70,16 @@ where
         self.children.as_ref()
     }
 
+    fn is_renderable(&self) -> bool {
+        match self.data {
+            NodeData::Element(_) => true,
+            NodeData::Text(_) => true,
+            NodeData::Comment(_) => false,
+            NodeData::DocType(_) => false,
+            NodeData::Document(_) => false,
+        }
+    }
+
     fn add_child_at_position(&mut self, id: NodeId, position: Option<usize>) {
         match position {
             Some(position) => {

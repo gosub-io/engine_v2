@@ -1,4 +1,4 @@
-use gosub_shared::traits::node::{ElementData, Node, TextData};
+use gosub_shared::traits::node::{ElementData, Node};
 use std::collections::HashMap;
 use gosub_html5::document::tree_iterator::TreeIterator;
 use gosub_shared::document::DocumentHandle;
@@ -29,7 +29,7 @@ fn match_selector<C: HasDocument>(handle: DocumentHandle<C>, node_id: NodeId, se
             // println!("It's a match!");
             return true;
         }
-    } else if let Some(data) = node.get_text_data() {
+    } else if let Some(_) = node.get_text_data() {
         // println!("Matching text: {:?}", data.content());
         return false;
     // } else {
@@ -83,5 +83,22 @@ impl<C: HasDocument> RenderTree<C> for MyRenderTree<C> {
             properties: node_properties,
             _marker: Default::default(),
         }
+    }
+
+    fn get_property(&self, node_id: NodeId, prop_name: &str) -> Option<&Vec<C::CssDeclaration>> {
+        if let Some(props) = self.properties.get(&node_id) {
+            // @TODO: This can be optimized by using a hashmap
+            for prop in props {
+                if prop.name() == prop_name {
+                    return Some(props);
+                }
+            }
+        }
+
+        None
+    }
+
+    fn get_properties(&self, node_id: NodeId) -> Option<&Vec<C::CssDeclaration>> {
+        self.properties.get(&node_id)
     }
 }

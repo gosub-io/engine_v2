@@ -6,7 +6,7 @@ impl HasRenderBackend for MyTextRenderBackend { type RenderBackend = Self; }
 
 impl RenderBackend for MyTextRenderBackend {
     fn do_render_backend_things(&self) {
-        println!("Doing TEXTMODE render backend things");
+        println!("Doing render backend things for TextMode");
     }
 
     fn new() -> Self {

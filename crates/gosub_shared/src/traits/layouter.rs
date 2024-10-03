@@ -5,7 +5,5 @@ pub trait HasLayouter: Sized  + HasRenderTree {
 }
 
 pub trait Layouter<C: HasRenderTree>: Sized {
-    fn do_layouter_things(&self);
-
-    fn new() -> Self;
+    fn from_render_tree(render_tree: C::RenderTree) -> Self;
 }

@@ -4,14 +4,14 @@ use gosub_html5::document::builder::DocumentBuilder;
 use gosub_html5::document::document::MyDocument;
 use gosub_html5::document::walker::DocumentWalker;
 use gosub_html5::html5parser::MyHtmlParser;
-use gosub_renderer::backend::MyRenderBackend;
-use gosub_renderer::layouter::MyLayouter;
+use gosub_renderer::backend::text::backend::MyTextRenderBackend;
+use gosub_renderer::layouter::layouter::MyLayouter;
 use gosub_renderer::render_tree::render_tree::MyRenderTree;
-use gosub_renderer::tree_drawer::MyTreeDrawer;
+use gosub_renderer::tree_drawer::tree_drawer::MyTreeDrawer;
 use gosub_shared::traits::css_system::{HasCssParser, HasCssSystem};
 use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::html5_parser::{HasHtmlParser, HtmlParser};
-use gosub_shared::traits::layouter::{HasLayouter};
+use gosub_shared::traits::layouter::{HasLayouter, Layouter};
 use gosub_shared::traits::module_conf::ModuleConfiguration;
 use gosub_shared::traits::render_backend::{HasRenderBackend};
 use gosub_shared::traits::render_tree::{HasRenderTree, RenderTree};
@@ -50,7 +50,7 @@ impl HasTreeDrawer for MyModuleConfiguration {
 }
 
 impl HasRenderBackend for MyModuleConfiguration {
-    type RenderBackend = MyRenderBackend;
+    type RenderBackend = MyTextRenderBackend;
 }
 
 impl HasCssParser for MyModuleConfiguration { type CssParser = MyCss3Parser<Self>; }
@@ -75,8 +75,8 @@ fn main_do_things<C: ModuleConfiguration>() {
 
     dbg!(&handle.get().stylesheets());
 
-    let _render_tree = C::RenderTree::from_document(handle.clone());
-    // let layouter = C::Layouter::from_render_tree(render_tree);
+    let render_tree = C::RenderTree::from_document(handle.clone());
+    let _layouter = C::Layouter::from_render_tree(render_tree);
     // let render_backend = C::RenderBackend::from_layouter(layouter);
     // render_backend.render();
 }

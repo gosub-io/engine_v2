@@ -11,7 +11,8 @@ use gosub_shared::traits::render_tree::RenderTree;
 pub struct MyRenderTree<C: HasDocument + HasCssSystem> {
     /// A map of all properties for each node(id)
     properties: HashMap<NodeId, Vec<C::CssDeclaration>>,
-    _marker: std::marker::PhantomData<C>,
+    handle: DocumentHandle<C>,
+    marker: std::marker::PhantomData<C>,
 }
 
 fn match_selector<C: HasDocument>(handle: DocumentHandle<C>, node_id: NodeId, selector: &str) -> bool {
@@ -78,10 +79,10 @@ impl<C: HasDocument> RenderTree<C> for MyRenderTree<C> {
             }
         }
 
-        dbg!(&node_properties);
         Self {
             properties: node_properties,
-            _marker: Default::default(),
+            handle: handle,
+            marker: Default::default(),
         }
     }
 
@@ -100,5 +101,9 @@ impl<C: HasDocument> RenderTree<C> for MyRenderTree<C> {
 
     fn get_properties(&self, node_id: NodeId) -> Option<&Vec<C::CssDeclaration>> {
         self.properties.get(&node_id)
+    }
+
+    fn get_handle(&self) -> DocumentHandle<C> {
+        self.handle.clone()
     }
 }

@@ -11,4 +11,6 @@ pub trait RenderTree<C: HasDocument>: Sized {
 
     fn get_property(&self, node_id: NodeId, prop_name: &str) -> Option<&Vec<C::CssDeclaration>>;
     fn get_properties(&self, node_id: NodeId) -> Option<&Vec<C::CssDeclaration>>;
+
+    fn get_handle(&self) -> DocumentHandle<C>;
 }

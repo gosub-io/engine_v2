@@ -5,7 +5,7 @@ use gosub_html5::document::document::MyDocument;
 use gosub_html5::document::walker::DocumentWalker;
 use gosub_html5::html5parser::MyHtmlParser;
 use gosub_renderer::backend::text::backend::MyTextRenderBackend;
-use gosub_renderer::layouter::layouter::MyLayouter;
+use gosub_renderer::layouter::basic_layouter::{BasicLayouter, Size};
 use gosub_renderer::render_tree::render_tree::MyRenderTree;
 use gosub_renderer::tree_drawer::tree_drawer::MyTreeDrawer;
 use gosub_shared::traits::css_system::{HasCssParser, HasCssSystem};
@@ -38,7 +38,7 @@ impl HasHtmlParser for MyModuleConfiguration {
 }
 
 impl HasLayouter for MyModuleConfiguration {
-    type Layouter = MyLayouter<Self>;
+    type Layouter = BasicLayouter<Self>;
 }
 
 impl HasRenderTree for MyModuleConfiguration {
@@ -70,13 +70,16 @@ fn main_do_things<C: ModuleConfiguration>() {
 
     let walker = DocumentWalker::new(handle.clone());
     walker.print_tree(handle.clone(), true);
-
-    println!("Total stylesheets: {}", handle.get().stylesheets().len());
-
-    dbg!(&handle.get().stylesheets());
+    println!("-----------------------------------------------");
 
     let render_tree = C::RenderTree::from_document(handle.clone());
-    let _layouter = C::Layouter::from_render_tree(render_tree);
-    // let render_backend = C::RenderBackend::from_layouter(layouter);
-    // render_backend.render();
+    let layouter = C::Layouter::from_render_tree(render_tree, Size { width: 800.0, height: 600.0 });
+
+    for box_ in layouter.get_boxes() {
+        println!("{}", box_);
+    }
+    println!("-----------------------------------------------");
+
+    let render_backend = C::RenderBackend::from_layouter(layouter);
+    render_backend.render();
 }

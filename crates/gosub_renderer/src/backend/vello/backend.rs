@@ -1,15 +1,16 @@
-use gosub_shared::traits::render_backend::{HasRenderBackend, RenderBackend};
+use gosub_shared::traits::layouter::HasLayouter;
+use gosub_shared::traits::render_backend::RenderBackend;
 
-pub struct MyVelloRenderBackend;
+pub struct MyVelloRenderBackend<C: HasLayouter> {
+    _marker: std::marker::PhantomData<C>,
+}
 
-impl HasRenderBackend for MyVelloRenderBackend { type RenderBackend = Self; }
-
-impl RenderBackend for MyVelloRenderBackend {
-    fn do_render_backend_things(&self) {
-        println!("Doing render backend things for VELLO 2d system");
+impl<C: HasLayouter> RenderBackend<C> for MyVelloRenderBackend<C> {
+    fn from_layouter(_layouter: C::Layouter) -> Self {
+        todo!()
     }
 
-    fn new() -> Self {
-        Self
+    fn render_scene(&mut self) {
+        todo!()
     }
 }

@@ -1,10 +1,11 @@
+use std::thread::sleep;
 use gosub_css3::css3parser::MyCss3Parser;
 use gosub_css3::MyCssSystem;
 use gosub_html5::document::builder::DocumentBuilder;
 use gosub_html5::document::document::MyDocument;
 use gosub_html5::document::walker::DocumentWalker;
 use gosub_html5::html5parser::MyHtmlParser;
-use gosub_renderer::backend::text::backend::MyTextRenderBackend;
+use gosub_renderer::backend::ratatui::backend::MyRatatuiRenderBackend;
 use gosub_renderer::layouter::basic_layouter::{BasicLayouter, Size};
 use gosub_renderer::render_tree::render_tree::MyRenderTree;
 use gosub_renderer::tree_drawer::tree_drawer::MyTreeDrawer;
@@ -13,7 +14,7 @@ use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::html5_parser::{HasHtmlParser, HtmlParser};
 use gosub_shared::traits::layouter::{HasLayouter, Layouter};
 use gosub_shared::traits::module_conf::ModuleConfiguration;
-use gosub_shared::traits::render_backend::{HasRenderBackend};
+use gosub_shared::traits::render_backend::{HasRenderBackend, RenderBackend};
 use gosub_shared::traits::render_tree::{HasRenderTree, RenderTree};
 use gosub_shared::traits::tree_drawer::{HasTreeDrawer};
 
@@ -50,7 +51,7 @@ impl HasTreeDrawer for MyModuleConfiguration {
 }
 
 impl HasRenderBackend for MyModuleConfiguration {
-    type RenderBackend = MyTextRenderBackend;
+    type RenderBackend = MyRatatuiRenderBackend<Self>;
 }
 
 impl HasCssParser for MyModuleConfiguration { type CssParser = MyCss3Parser<Self>; }
@@ -80,6 +81,9 @@ fn main_do_things<C: ModuleConfiguration>() {
     }
     println!("-----------------------------------------------");
 
-    let render_backend = C::RenderBackend::from_layouter(layouter);
-    render_backend.render();
+    let mut render_backend = C::RenderBackend::from_layouter(layouter);
+    loop {
+        render_backend.render_scene();
+        sleep(std::time::Duration::from_millis(1000));
+    }
 }

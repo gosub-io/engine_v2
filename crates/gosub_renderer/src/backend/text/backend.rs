@@ -1,15 +1,16 @@
-use gosub_shared::traits::render_backend::{HasRenderBackend, RenderBackend};
+use gosub_shared::traits::layouter::HasLayouter;
+use gosub_shared::traits::render_backend::RenderBackend;
 
-pub struct MyTextRenderBackend;
+pub struct MyTextRenderBackend<C: HasLayouter> {
+    _marker: std::marker::PhantomData<C>,
+}
 
-impl HasRenderBackend for MyTextRenderBackend { type RenderBackend = Self; }
-
-impl RenderBackend for MyTextRenderBackend {
-    fn do_render_backend_things(&self) {
-        println!("Doing render backend things for TextMode");
+impl<C: HasLayouter> RenderBackend<C> for MyTextRenderBackend<C> {
+    fn from_layouter(_layouter: C::Layouter) -> Self {
+        todo!()
     }
 
-    fn new() -> Self {
-        Self
+    fn render_scene(&mut self) {
+        todo!()
     }
 }

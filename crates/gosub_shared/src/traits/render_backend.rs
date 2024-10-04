@@ -1,12 +1,10 @@
+use crate::traits::layouter::HasLayouter;
 
-
-pub trait HasRenderBackend {
-    type RenderBackend: RenderBackend;
+pub trait HasRenderBackend: Sized + HasLayouter {
+    type RenderBackend: RenderBackend<Self>;
 }
 
-
-pub trait RenderBackend: Sized {
-    fn do_render_backend_things(&self);
-
-    fn new() -> Self;
+pub trait RenderBackend<C: HasLayouter>: Sized {
+    fn from_layouter(layouter: C::Layouter) -> Self;
+    fn render_scene(&mut self);
 }

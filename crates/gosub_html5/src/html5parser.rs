@@ -76,7 +76,6 @@ impl<C: HasDocument + HasCssParser> HtmlParser<C> for MyHtmlParser<C> {
             binding.update_node(node4_id, node);
         }
 
-
         // We also mimic some CSS style parsing here..
         let mut parser = C::CssParser::new();
         let stylesheet = parser.parse_str("h1 { color: red; }");

@@ -20,10 +20,11 @@ pub trait Document<C: HasCssSystem>: Sized {
     fn add_stylesheet(&mut self, stylesheet: C::CssStylesheet);
 
     fn detach_node(&mut self, id: NodeId) -> Option<Self::Node>;
-    fn attach_node(&mut self, id: NodeId, node: Self::Node);
     fn update_node(&mut self, id: NodeId, node: Self::Node);
 
     fn get_url(&self) -> &str;
     fn get_node_mut(&mut self, id: NodeId) -> Option<&mut Self::Node>;
     fn get_node_clone(&self, id: NodeId) -> Option<Self::Node>;
+
+    fn get_node_by_element_id(&self, name: &str) -> Option<NodeId>;
 }

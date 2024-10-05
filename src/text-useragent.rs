@@ -9,11 +9,13 @@ use gosub_renderer::backend::ratatui::backend::MyRatatuiRenderBackend;
 use gosub_renderer::layouter::basic_layouter::{BasicLayouter, Size};
 use gosub_renderer::render_tree::render_tree::MyRenderTree;
 use gosub_renderer::tree_drawer::tree_drawer::MyTreeDrawer;
+use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::css_system::{HasCssParser, HasCssSystem};
 use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::html5_parser::{HasHtmlParser, HtmlParser};
 use gosub_shared::traits::layouter::{HasLayouter, Layouter};
 use gosub_shared::traits::module_conf::ModuleConfiguration;
+use gosub_shared::traits::node::{ElementData, Node};
 use gosub_shared::traits::render_backend::{HasRenderBackend, RenderBackend};
 use gosub_shared::traits::render_tree::{HasRenderTree, RenderTree};
 use gosub_shared::traits::tree_drawer::{HasTreeDrawer};
@@ -64,26 +66,53 @@ fn main() {
 
 fn main_do_things<C: ModuleConfiguration>() {
 
-    let handle = DocumentBuilder::new_document("https://example.com");
+    let mut handle = DocumentBuilder::new_document("https://example.com");
     let mut html_parser = C::HtmlParser::new(handle.clone());
 
     html_parser.parse_str("<html><head></head><body><p>Hello world!</p></body></html>");
 
+    println!("-----------------------------------------------");
     let walker = DocumentWalker::new(handle.clone());
     walker.print_tree(handle.clone(), true);
-    println!("-----------------------------------------------");
 
+    println!("-----------------------------------------------");
+    println!("{:?}", handle.get().get_node_by_element_id("myid"));
+    println!("{:?}", handle.get().get_node_by_element_id("foobar"));
+    println!("{:?}", handle.get().get_node_by_element_id("myid"));
+    println!("{:?}", handle.get().get_node_by_element_id("new-id"));
+
+    let node_id = NodeId::new(6);
+    let mut binding = handle.get_mut();
+    if let Some(mut node) = binding.detach_node(node_id) {
+        if let Some(data) = node.get_element_data_mut() {
+            data.add_attribute("class", "foo bar baz");
+            data.add_attribute("id", "new-id");
+            binding.update_node(node_id, node);
+        }
+    }
+    drop(binding);
+
+    println!("{:?}", handle.get().get_node_by_element_id("myid"));
+    println!("{:?}", handle.get().get_node_by_element_id("foobar"));
+    println!("{:?}", handle.get().get_node_by_element_id("myid"));
+    println!("{:?}", handle.get().get_node_by_element_id("new-id"));
+
+    println!("-----------------------------------------------");
+    let walker = DocumentWalker::new(handle.clone());
+    walker.print_tree(handle.clone(), true);
+
+    println!("-----------------------------------------------");
     let render_tree = C::RenderTree::from_document(handle.clone());
     let layouter = C::Layouter::from_render_tree(render_tree, Size { width: 800.0, height: 600.0 });
 
     for box_ in layouter.get_boxes() {
         println!("{}", box_);
     }
-    println!("-----------------------------------------------");
 
-    let mut render_backend = C::RenderBackend::from_layouter(layouter);
-    loop {
-        render_backend.render_scene();
-        sleep(std::time::Duration::from_millis(1000));
-    }
+    println!("-----------------------------------------------");
+    // let mut render_backend = C::RenderBackend::from_layouter(layouter);
+    // loop {
+    //     render_backend.render_scene();
+    //     sleep(std::time::Duration::from_millis(1000));
+    // }
 }

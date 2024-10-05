@@ -92,10 +92,10 @@ impl<C: HasRenderTree> Layouter<C> for BasicLayouter<C> {
 
             if let Some(element) = node.get_element_data() {
                 let box_ = Box {
-                    x: parent_box.x + 1,
-                    y: parent_box.y + 1,
-                    width: parent_box.width / 2,
-                    height: parent_box.height / 2,
+                    x: parent_box.x + 10,
+                    y: parent_box.y + 10,
+                    width: parent_box.width / 3 * 2,
+                    height: parent_box.height / 3 * 2,
                     title: element.name().to_string(),
                     z_index: 0,
                 };

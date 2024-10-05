@@ -16,8 +16,8 @@ TODO / Test cases we need to cover:
 - [X] attach CSS stylesheets to the DOM
 - [ ] let user query the DOM for nodes
 - [ ] let user query the DOM for nodes with a specific CSS selector
-- [ ] allow user that adds an attribute to a (element) node automatically set the named_ids in the document.
+- [X] allow user that adds an attribute to a (element) node automatically set the named_ids in the document.
 - [ ] allow user to retrieve info from the node from its element data (like node_id, doc_handle)
-- [ ] allow user to modify node data from document element (don't know it this is needed / feasable)
+- [X] allow user to modify node data from document element (don't know it this is needed / feasable)
 - [ ] add document task queue (optional for now)
-- [ ] Allow callers to update attributes in nodes in an efficient way
+- [X] Allow callers to update attributes in nodes in an efficient way

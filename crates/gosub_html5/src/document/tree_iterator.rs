@@ -37,18 +37,25 @@ impl<C: HasDocument> Iterator for TreeIterator<C> {
 
 #[cfg(test)]
 mod tests {
+    use gosub_css3::MyCssSystem;
+    use gosub_shared::traits::node::{CommentData, DocTypeData, ElementData, TextData};
+    use crate::document::builder::DocumentBuilder;
+    use crate::document::document::MyDocument;
+    use crate::document::tree_iterator::TreeIterator;
 
     #[test]
     fn test_tree_iterator() {
-        let mut doc = MyDocument::new("test");
-        let root = doc.get_root_node().unwrap();
-        let body = doc.add_element(root.id(), "body", ElementData::new());
-        let div = doc.add_element(body, "div", ElementData::new());
-        let text = doc.add_text(div, "Hello, world!", TextData::new());
-        let comment = doc.add_comment(div, "This is a comment", CommentData::new());
-        let doctype = doc.add_doctype(root.id(), "html", DoctypeData::new());
+        let mut handle = DocumentBuilder::<MyDocument<MyCssSystem>>::new_document("test://test");
 
-        let mut iter = DocumentTreeIterator::new(doc.clone());
+        let binding = handle.clone().get();
+        let root = binding.get_root().unwrap();
+        let body = binding.add_element(root.id(), "body", ElementData::new("body", "html"));
+        let div = binding.add_element(body, "div", ElementData::new("div", "html"));
+        let text = binding.add_text(div, "Hello, world!", TextData::new("Hello world!"));
+        let comment = binding.add_comment(div, "This is a comment", CommentData::new("This is a comment"));
+        let doctype = binding.add_doctype(root.id(), "html", DocTypeData::new("foo", "public", "system"));
+
+        let mut iter = TreeIterator::new(handle.clone());
         assert_eq!(iter.next(), Some(root.id()));
         assert_eq!(iter.next(), Some(body));
         assert_eq!(iter.next(), Some(div));

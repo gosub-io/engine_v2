@@ -38,7 +38,6 @@ impl<C: HasDocument> Iterator for TreeIterator<C> {
 #[cfg(test)]
 mod tests {
     use gosub_css3::MyCssSystem;
-    use gosub_shared::document::DocumentHandle;
     use gosub_shared::node_id::NodeId;
     use gosub_shared::traits::node::NodeBuilder as _;
     use crate::document::builder::DocumentBuilder;
@@ -48,7 +47,7 @@ mod tests {
 
     #[test]
     fn test_tree_iterator() {
-        let mut handle: DocumentHandle<MyDocument<MyCssSystem>> = DocumentBuilder::new_document("https://example.com");
+        let mut handle= DocumentBuilder::<MyDocument<MyCssSystem>>::new_document("https://example.com");
 
         let body_node = NodeBuilder::new_element_node("body", "html");
         let body_node_id = handle.get_mut().register_node_at(body_node, NodeId::root(), None);

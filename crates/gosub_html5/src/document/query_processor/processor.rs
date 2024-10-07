@@ -46,8 +46,9 @@ impl <C: HasDocument, Q: Query>  QueryProcessor<C, Q> {
         Ok(found_ids)
     }
 
-    fn matches_query_condition(&self, _node_id: &NodeId, _condition: &Q::Condition) -> bool {
-        todo!()
+    fn matches_query_condition(&self, node_id: &NodeId, condition: &Q::Condition) -> bool {
+        // This is just a mock implementation, we just return true for even node ids
+        node_id.id() % 2 == 0
     }
 }
 

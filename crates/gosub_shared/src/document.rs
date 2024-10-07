@@ -4,24 +4,23 @@ use crate::traits::document::HasDocument;
 use crate::traits::document::Document;
 
 #[derive(Debug)]
-pub struct DocumentHandle<C: HasDocument>(pub Rc<RefCell<C::Document>>);
+pub struct DocumentHandle<D: HasDocument>(pub Rc<RefCell<D>>);
 
-impl <C: HasDocument> DocumentHandle<C> {
-    pub fn new(document: C::Document) -> Self {
+impl <D: HasDocument> DocumentHandle<D> {
+    pub fn new(document: D) -> Self {
         let handle = Self(Rc::new(RefCell::new(document)));
 
-        let mut binding = handle.clone();
-        let mut binding2 = binding.get_mut();
-        binding2.set_handle(handle.clone());
+        let mut binding = handle.clone().get_mut();
+        binding.set_handle(handle.clone());
 
         handle
     }
 
-    pub fn get(&self) -> Ref<'_, C::Document> {
+    pub fn get(&self) -> Ref<'_, D::Document> {
         self.0.borrow()
     }
 
-    pub fn get_mut(&mut self) -> RefMut<'_, C::Document> {
+    pub fn get_mut(&mut self) -> RefMut<'_, D::Document> {
         RefCell::borrow_mut(&self.0)
     }
 }

@@ -15,12 +15,13 @@ pub trait HasDocument: Sized + HasCssSystem {
 pub trait Document<C: HasCssSystem + HasDocument>: Sized {
     type Node: Node;
     type Query: Query;
+    type Document: Document<C>;
 
     fn new(url: &str) -> Self;
     fn register_node_at(&mut self, node: Self::Node, parent_id: NodeId, position: Option<usize>) -> NodeId;
 
-    fn get_handle(&self) -> DocumentHandle<C>;
-    fn set_handle(&mut self, handle: DocumentHandle<C>);
+    fn get_handle(&self) -> DocumentHandle<Self::Document>;
+    fn set_handle(&mut self, handle: DocumentHandle<Self::Document>);
 
     fn get_root_node(&self) -> Option<&Self::Node>;
     fn get_node(&self, id: NodeId) -> Option<&Self::Node>;

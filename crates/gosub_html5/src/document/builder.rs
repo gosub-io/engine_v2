@@ -8,6 +8,7 @@ pub struct DocumentBuilder<C: HasDocument> {
 impl <C: HasDocument> DocumentBuilder<C> {
     pub fn new_document(url: &str) -> DocumentHandle<C> {
         let doc = C::Document::new(url);
+
         DocumentHandle::new(doc)
     }
 

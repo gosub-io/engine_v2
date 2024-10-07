@@ -29,6 +29,7 @@ graph TB
     subgraph rendering [Rendering]
       Document --> RenderTree
       RenderTree --> Layouter
+      RenderTree --> RenderBackend
       Layouter --> RenderBackend
-      RenderBackend --> TreeDrawer
+      TreeDrawer --> RenderBackend 
     end  

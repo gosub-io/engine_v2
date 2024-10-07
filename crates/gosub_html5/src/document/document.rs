@@ -1,23 +1,32 @@
 use std::collections::HashMap;
+use anyhow::Error;
+use gosub_shared::document::DocumentHandle;
 use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::css_system::HasCssSystem;
 use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::node::{Node as _, NodeBuilder as _};
 use crate::document::document_events::MutationEvents;
 use crate::document::query_processor::processor::QueryProcessor;
+use crate::document::query_processor::query::Query;
 use crate::node::arena::NodeArena;
 use crate::node::builder::NodeBuilder;
 use crate::node::node_impl::Node;
 
-pub struct MyDocument<C: HasCssSystem> {
+pub struct MyDocument<C: HasCssSystem + HasDocument> {
     pub(crate) arena: NodeArena<Node>,
     url: String,
+    handle: Option<DocumentHandle<C>>,
     stylesheets: Vec<C::CssStylesheet>,
     pub(crate) named_elements: HashMap<String, NodeId>,
     _marker: std::marker::PhantomData<C>,
 }
 
-impl<C: HasCssSystem> HasCssSystem for MyDocument<C> {
+// impl<C: HasDocument> HasDocument for MyDocument<C> {
+//     type Document = Self;
+//     type Node = Node;
+// }
+
+impl<C: HasCssSystem + HasDocument> HasCssSystem for MyDocument<C> {
     type CssStylesheet = C::CssStylesheet;
     type CssRule = C::CssRule;
     type CssDeclaration = C::CssDeclaration;
@@ -26,12 +35,13 @@ impl<C: HasCssSystem> HasCssSystem for MyDocument<C> {
 
 impl<C: HasCssSystem + HasDocument> Document<C> for MyDocument<C> {
     type Node = Node;
-    type QueryProcessor = QueryProcessor<C>;
+    type Query = Query;
 
     fn new(url: &str) -> Self {
         let mut doc = Self {
             arena: NodeArena::new(),
             url: url.into(),
+            handle: None,
             stylesheets: Vec::new(),
             named_elements: HashMap::new(),
             _marker: std::marker::PhantomData,
@@ -56,6 +66,17 @@ impl<C: HasCssSystem + HasDocument> Document<C> for MyDocument<C> {
         self.arena.update_node(parent_id, parent_node);
 
         node_id
+    }
+
+    fn get_handle(&self) -> DocumentHandle<C> {
+        match &self.handle {
+            Some(handle) => handle.clone(),
+            None => panic!("Document handle is not set"),
+        }
+    }
+
+    fn set_handle(&mut self, handle: DocumentHandle<C>) {
+        self.handle = Some(handle);
     }
 
     fn get_root_node(&self) -> Option<&Self::Node> {
@@ -100,5 +121,10 @@ impl<C: HasCssSystem + HasDocument> Document<C> for MyDocument<C> {
 
     fn get_node_by_element_id(&self, name: &str) -> Option<NodeId> {
         self.named_elements.get(name).cloned()
+    }
+
+    fn query(&self, query: &Self::Query) -> Result<Vec<NodeId>, Error> {
+        let qp = QueryProcessor::new(self.get_handle());
+        qp.query(query)
     }
 }

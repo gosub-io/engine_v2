@@ -1,4 +1,59 @@
-use gosub_shared::traits::document::query::{Condition, SearchType};
+#[derive(Debug, PartialEq, Clone)]
+pub enum Condition {
+    EqualsTag(String),
+    EqualsId(String),
+    ContainsClass(String),
+    ContainsAttribute(String),
+    ContainsChildTag(String),
+    HasParentTag(String),
+}
+
+impl gosub_shared::traits::document::query::Condition for Condition {
+    fn equals_tag(tag_name: &str) -> Self {
+        Condition::EqualsTag(tag_name.to_owned())
+    }
+
+    fn equals_id(id: &str) -> Self {
+        Condition::EqualsId(id.to_owned())
+    }
+
+    fn contains_class(class: &str) -> Self {
+        Condition::ContainsClass(class.to_owned())
+    }
+
+    fn contains_attribute(attribute: &str) -> Self {
+        Condition::ContainsAttribute(attribute.to_owned())
+    }
+
+    fn contains_child_tag(child_tag: &str) -> Self {
+        Condition::ContainsChildTag(child_tag.to_owned())
+    }
+
+    fn has_parent_tag(parent_tag: &str) -> Self {
+        Condition::HasParentTag(parent_tag.to_owned())
+    }
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub enum SearchType {
+    Uninitialized,
+    FindFirst,
+    FindAll,
+}
+
+impl gosub_shared::traits::document::query::SearchType for SearchType {
+    fn uninitialized() -> Self {
+        SearchType::Uninitialized
+    }
+
+    fn find_first() -> Self {
+        SearchType::FindFirst
+    }
+
+    fn find_all() -> Self {
+        SearchType::FindAll
+    }
+}
 
 pub struct Query {
     pub conditions: Vec<Condition>,
@@ -6,6 +61,16 @@ pub struct Query {
 }
 
 impl gosub_shared::traits::document::query::Query for Query {
+    type SearchType = SearchType;
+    type Condition = Condition;
+
+    fn new(search_type: Self::SearchType, conditions: Vec<Self::Condition>) -> Self {
+        Self {
+            search_type,
+            conditions,
+        }
+    }
+
     fn search_type(&self) -> SearchType {
         self.search_type.clone()
     }

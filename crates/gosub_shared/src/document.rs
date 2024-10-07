@@ -1,13 +1,20 @@
 use std::cell::{Ref, RefCell, RefMut};
 use std::rc::Rc;
 use crate::traits::document::HasDocument;
+use crate::traits::document::Document;
 
 #[derive(Debug)]
 pub struct DocumentHandle<C: HasDocument>(pub Rc<RefCell<C::Document>>);
 
 impl <C: HasDocument> DocumentHandle<C> {
     pub fn new(document: C::Document) -> Self {
-        Self(Rc::new(RefCell::new(document)))
+        let handle = Self(Rc::new(RefCell::new(document)));
+
+        let mut binding = handle.clone();
+        let mut binding2 = binding.get_mut();
+        binding2.set_handle(handle.clone());
+
+        handle
     }
 
     pub fn get(&self) -> Ref<'_, C::Document> {

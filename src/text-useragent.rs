@@ -3,7 +3,6 @@ use gosub_css3::css3parser::MyCss3Parser;
 use gosub_css3::MyCssSystem;
 use gosub_html5::document::builder::DocumentBuilder;
 use gosub_html5::document::document::MyDocument;
-use gosub_html5::document::query_processor::processor::QueryProcessor;
 use gosub_html5::document::walker::DocumentWalker;
 use gosub_html5::html5parser::MyHtmlParser;
 use gosub_renderer::backend::ratatui::backend::MyRatatuiRenderBackend;
@@ -13,6 +12,7 @@ use gosub_renderer::tree_drawer::tree_drawer::MyTreeDrawer;
 use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::css_system::{HasCssParser, HasCssSystem};
 use gosub_shared::traits::document::{Document, HasDocument};
+use gosub_shared::traits::document::query::{Condition, Query, SearchType};
 use gosub_shared::traits::html5_parser::{HasHtmlParser, HtmlParser};
 use gosub_shared::traits::layouter::{HasLayouter, Layouter};
 use gosub_shared::traits::module_conf::ModuleConfiguration;
@@ -34,7 +34,6 @@ impl HasCssSystem for MyModuleConfiguration {
 impl HasDocument for MyModuleConfiguration {
     type Document = MyDocument<Self>;
     type Node = <Self::Document as Document<Self>>::Node;
-    type QueryProcessor = QueryProcessor<Self>;
 }
 
 impl HasHtmlParser for MyModuleConfiguration {
@@ -108,6 +107,21 @@ fn main_do_things<C: ModuleConfiguration>() {
 
     for box_ in layouter.get_boxes() {
         println!("{}", box_);
+    }
+
+    println!("-----------------------------------------------");
+    let q = Query::new(
+        SearchType::find_all(),
+        vec![
+            Condition::equals_id("new-id")
+        ]
+    );
+    if let Ok(entries) = handle.get().query(&q) {
+        for entry in entries {
+            println!("{:?}", entry);
+        }
+    } else {
+        println!("Query failed");
     }
 
     println!("-----------------------------------------------");

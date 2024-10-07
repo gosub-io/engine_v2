@@ -1,25 +1,9 @@
-use anyhow::Error;
-use crate::document::DocumentHandle;
 use crate::node_id::NodeId;
 use crate::traits::css_system::HasCssSystem;
+use crate::traits::document::query::QueryProcessor;
 use crate::traits::node::Node;
 
-// QueryCondition is a trait that represents a condition that can be used in a query.
-pub trait Condition {}
-
-// SearchType is a trait that represents the type of search that is being performed.
-pub trait SearchType {}
-
-// Query is a trait that represents a query that can be performed on a document.
-pub trait Query {
-    fn search_type(&self) -> impl SearchType;
-    fn conditions(&self) -> Vec<impl Condition>;
-}
-
-// QueryProcessor is a trait that represents a query processor that can be used to process queries.
-pub trait QueryProcessor<C: HasDocument>: Sized {
-    fn query(handle: DocumentHandle<C>, query: &impl Query) -> Result<Vec<NodeId>, Error>;
-}
+pub mod query;
 
 pub trait HasDocument: Sized + HasCssSystem {
     type Document: Document<Self, Node = Self::Node>;

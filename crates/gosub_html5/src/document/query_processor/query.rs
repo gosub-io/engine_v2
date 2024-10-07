@@ -1,35 +1,16 @@
-#[derive(Debug, PartialEq, Clone)]
-pub enum Condition {
-    EqualsTag(String),
-    EqualsId(String),
-    ContainsClass(String),
-    ContainsAttribute(String),
-    ContainsChildTag(String),
-    HasParentTag(String),
-}
-
-impl gosub_shared::traits::document::Condition for Condition {}
-
-#[derive(Debug, PartialEq, Clone)]
-pub enum SearchType {
-    Uninitialized,
-    FindFirst,
-    FindAll,
-}
-
-impl gosub_shared::traits::document::SearchType for SearchType {}
+use gosub_shared::traits::document::query::{Condition, SearchType};
 
 pub struct Query {
     pub conditions: Vec<Condition>,
     pub search_type: SearchType,
 }
 
-impl gosub_shared::traits::document::Query for Query {
-    fn search_type(&self) -> impl gosub_shared::traits::document::SearchType {
+impl gosub_shared::traits::document::query::Query for Query {
+    fn search_type(&self) -> SearchType {
         self.search_type.clone()
     }
 
-    fn conditions(&self) -> Vec<impl gosub_shared::traits::document::Condition> {
+    fn conditions(&self) -> Vec<Condition> {
         self.conditions.clone()
     }
 }

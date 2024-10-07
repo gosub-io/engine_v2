@@ -4,34 +4,34 @@ use std::cell::{Ref, RefCell, RefMut};
 use std::rc::Rc;
 
 #[derive(Debug)]
-pub struct DocumentHandle<D: HasDocument>(pub Rc<RefCell<D>>);
+pub struct DocumentHandle<C: HasDocument>(pub Rc<RefCell<C::Document>>);
 
-impl<D: HasDocument> DocumentHandle<D> {
-    pub fn new(document: D) -> Self {
+impl<C: HasDocument> DocumentHandle<C> {
+    pub fn new(document: C::Document) -> Self {
         let handle = Self(Rc::new(RefCell::new(document)));
 
-        let mut binding = handle.clone().get_mut();
-        binding.set_handle(handle.clone());
+        let mut binding = handle.clone();
+        binding.get_mut().set_handle(handle.clone());
 
         handle
     }
 
-    pub fn get(&self) -> Ref<'_, D::Document> {
+    pub fn get(&self) -> Ref<'_, C::Document> {
         self.0.borrow()
     }
 
-    pub fn get_mut(&mut self) -> RefMut<'_, D::Document> {
+    pub fn get_mut(&mut self) -> RefMut<'_, C::Document> {
         RefCell::borrow_mut(&self.0)
     }
 }
 
-impl<D: HasDocument> Clone for DocumentHandle<D> {
+impl<C: HasDocument> Clone for DocumentHandle<C> {
     fn clone(&self) -> Self {
         Self(self.0.clone())
     }
 }
 
-impl<D: HasDocument> PartialEq for DocumentHandle<D> {
+impl<C: HasDocument> PartialEq for DocumentHandle<C> {
     fn eq(&self, other: &Self) -> bool {
         Rc::ptr_eq(&self.0, &other.0)
     }

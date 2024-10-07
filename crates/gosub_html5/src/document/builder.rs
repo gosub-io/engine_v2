@@ -5,7 +5,7 @@ pub struct DocumentBuilder<C: HasDocument> {
     _phantom: std::marker::PhantomData<C>,
 }
 
-impl <C: HasDocument> DocumentBuilder<C> {
+impl<C: HasDocument> DocumentBuilder<C> {
     pub fn new_document(url: &str) -> DocumentHandle<C> {
         let doc = C::Document::new(url);
 

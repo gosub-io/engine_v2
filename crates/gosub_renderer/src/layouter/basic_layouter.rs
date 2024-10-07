@@ -1,11 +1,11 @@
-use std::fmt::Display;
 use gosub_html5::document::tree_iterator::TreeIterator;
 use gosub_shared::traits::document::Document;
+use gosub_shared::traits::layouter::Box as BoxTrait;
 use gosub_shared::traits::layouter::Layouter;
 use gosub_shared::traits::layouter::Size as SizeTrait;
-use gosub_shared::traits::layouter::Box as BoxTrait;
 use gosub_shared::traits::node::{ElementData, Node, TextData};
 use gosub_shared::traits::render_tree::{HasRenderTree, RenderTree};
+use std::fmt::Display;
 
 #[derive(Debug, Clone)]
 pub struct Box {
@@ -19,7 +19,11 @@ pub struct Box {
 
 impl Display for Box {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Box[ x: {}, y: {}, width: {}, height: {}, title: {}, z_index: {} ]", self.x, self.y, self.width, self.height, self.title, self.z_index)
+        write!(
+            f,
+            "Box[ x: {}, y: {}, width: {}, height: {}, title: {}, z_index: {} ]",
+            self.x, self.y, self.width, self.height, self.title, self.z_index
+        )
     }
 }
 

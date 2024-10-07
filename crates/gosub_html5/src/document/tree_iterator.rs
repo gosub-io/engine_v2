@@ -1,14 +1,14 @@
 use gosub_shared::document::DocumentHandle;
+use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::node::Node;
-use gosub_shared::node_id::NodeId;
 
 pub struct TreeIterator<C: HasDocument> {
     stack: Vec<NodeId>,
     handle: DocumentHandle<C>,
 }
 
-impl <C: HasDocument> TreeIterator<C> {
+impl<C: HasDocument> TreeIterator<C> {
     pub fn new(handle: DocumentHandle<C>) -> Self {
         Self {
             stack: vec![NodeId::root()],
@@ -34,35 +34,45 @@ impl<C: HasDocument> Iterator for TreeIterator<C> {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
-    use gosub_css3::MyCssSystem;
-    use gosub_shared::node_id::NodeId;
-    use gosub_shared::traits::node::NodeBuilder as _;
     use crate::document::builder::DocumentBuilder;
     use crate::document::document::MyDocument;
     use crate::document::tree_iterator::TreeIterator;
     use crate::node::builder::NodeBuilder;
+    use gosub_css3::MyCssSystem;
+    use gosub_shared::node_id::NodeId;
+    use gosub_shared::traits::node::NodeBuilder as _;
 
     #[test]
     fn test_tree_iterator() {
-        let mut handle= DocumentBuilder::<MyDocument<MyCssSystem>>::new_document("https://example.com");
+        let mut handle =
+            DocumentBuilder::<MyDocument<MyCssSystem>>::new_document("https://example.com");
 
         let body_node = NodeBuilder::new_element_node("body", "html");
-        let body_node_id = handle.get_mut().register_node_at(body_node, NodeId::root(), None);
+        let body_node_id = handle
+            .get_mut()
+            .register_node_at(body_node, NodeId::root(), None);
 
         let div_node = NodeBuilder::new_element_node("div", "html");
-        let div_node_id = handle.get_mut().register_node_at(div_node, body_node_id, None);
+        let div_node_id = handle
+            .get_mut()
+            .register_node_at(div_node, body_node_id, None);
 
         let text_node = NodeBuilder::new_text_node("Hello, world!");
-        let text_node_id = handle.get_mut().register_node_at(text_node, div_node_id, None);
+        let text_node_id = handle
+            .get_mut()
+            .register_node_at(text_node, div_node_id, None);
 
         let comment_node = NodeBuilder::new_comment_node("This is a comment");
-        let comment_node_id = handle.get_mut().register_node_at(comment_node, div_node_id, None);
+        let comment_node_id = handle
+            .get_mut()
+            .register_node_at(comment_node, div_node_id, None);
 
         let doc_type = NodeBuilder::new_doctype_node("foo", "public", "system");
-        let doctype_node_id = handle.get_mut().register_node_at(doc_type, NodeId::root(), None);
+        let doctype_node_id = handle
+            .get_mut()
+            .register_node_at(doc_type, NodeId::root(), None);
 
         let mut iter = TreeIterator::<MyDocument<MyCssSystem>>::new(handle.clone());
         assert_eq!(iter.next().unwrap().id(), Some(NodeId::root()));

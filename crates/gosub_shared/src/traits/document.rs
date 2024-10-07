@@ -1,9 +1,9 @@
-use anyhow::Error;
 use crate::document::DocumentHandle;
 use crate::node_id::NodeId;
 use crate::traits::css_system::HasCssSystem;
 use crate::traits::document::query::Query;
 use crate::traits::node::Node;
+use anyhow::Error;
 
 pub mod query;
 
@@ -18,7 +18,12 @@ pub trait Document<C: HasCssSystem + HasDocument>: Sized {
     type Document: Document<C>;
 
     fn new(url: &str) -> Self;
-    fn register_node_at(&mut self, node: Self::Node, parent_id: NodeId, position: Option<usize>) -> NodeId;
+    fn register_node_at(
+        &mut self,
+        node: Self::Node,
+        parent_id: NodeId,
+        position: Option<usize>,
+    ) -> NodeId;
 
     fn get_handle(&self) -> DocumentHandle<Self::Document>;
     fn set_handle(&mut self, handle: DocumentHandle<Self::Document>);

@@ -1,12 +1,12 @@
-use gosub_shared::traits::node::{ElementData, Node};
-use std::collections::HashMap;
 use gosub_html5::document::tree_iterator::TreeIterator;
 use gosub_shared::document::DocumentHandle;
 use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::css_system::{CssDeclaration, HasCssSystem};
 use gosub_shared::traits::css_system::{CssRule, CssStylesheet};
 use gosub_shared::traits::document::{Document, HasDocument};
+use gosub_shared::traits::node::{ElementData, Node};
 use gosub_shared::traits::render_tree::RenderTree;
+use std::collections::HashMap;
 
 pub struct MyRenderTree<C: HasDocument + HasCssSystem> {
     /// A map of all properties for each node(id)
@@ -15,7 +15,11 @@ pub struct MyRenderTree<C: HasDocument + HasCssSystem> {
     marker: std::marker::PhantomData<C>,
 }
 
-fn match_selector<C: HasDocument>(handle: DocumentHandle<C>, node_id: NodeId, selector: &str) -> bool {
+fn match_selector<C: HasDocument>(
+    handle: DocumentHandle<C>,
+    node_id: NodeId,
+    selector: &str,
+) -> bool {
     // println!("match selector: {:?} {}", node_id, selector);
 
     let binding = handle.get();
@@ -33,7 +37,7 @@ fn match_selector<C: HasDocument>(handle: DocumentHandle<C>, node_id: NodeId, se
     } else if let Some(_) = node.get_text_data() {
         // println!("Matching text: {:?}", data.content());
         return false;
-    // } else {
+        // } else {
         // println!("Node is not an element or text");
     }
 
@@ -47,10 +51,9 @@ impl<C: HasDocument> RenderTree<C> for MyRenderTree<C> {
 
         // Iterate all nodes in the document
         for node_id in TreeIterator::new(handle.clone()) {
-
             // Skip any nodes immediately that are not renderable (comments, doctypes etc)
             if let Some(node) = handle.get().get_node(node_id) {
-                if ! node.is_renderable() {
+                if !node.is_renderable() {
                     continue;
                 }
             }
@@ -59,7 +62,7 @@ impl<C: HasDocument> RenderTree<C> for MyRenderTree<C> {
             for stylesheet in handle.get().stylesheets() {
                 for rule in stylesheet.rules() {
                     for selector in rule.selectors() {
-                        if ! match_selector(handle.clone(), node_id, selector) {
+                        if !match_selector(handle.clone(), node_id, selector) {
                             continue;
                         }
 
@@ -69,7 +72,7 @@ impl<C: HasDocument> RenderTree<C> for MyRenderTree<C> {
                             decls.push(C::CssDeclaration::new(
                                 declaration.name(),
                                 declaration.value(),
-                                declaration.important()
+                                declaration.important(),
                             ));
                         }
 

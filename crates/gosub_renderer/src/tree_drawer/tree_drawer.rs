@@ -1,5 +1,5 @@
 use gosub_shared::traits::layouter::HasLayouter;
-use gosub_shared::traits::tree_drawer::{TreeDrawer};
+use gosub_shared::traits::tree_drawer::TreeDrawer;
 
 pub struct MyTreeDrawer<C: HasLayouter> {
     _marker: std::marker::PhantomData<C>,

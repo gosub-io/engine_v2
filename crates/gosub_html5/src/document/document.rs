@@ -1,16 +1,16 @@
-use std::collections::HashMap;
-use anyhow::Error;
-use gosub_shared::document::DocumentHandle;
-use gosub_shared::node_id::NodeId;
-use gosub_shared::traits::css_system::HasCssSystem;
-use gosub_shared::traits::document::{Document, HasDocument};
-use gosub_shared::traits::node::{Node as _, NodeBuilder as _};
 use crate::document::document_events::MutationEvents;
 use crate::document::query_processor::processor::QueryProcessor;
 use crate::document::query_processor::query::Query;
 use crate::node::arena::NodeArena;
 use crate::node::builder::NodeBuilder;
 use crate::node::node_impl::Node;
+use anyhow::Error;
+use gosub_shared::document::DocumentHandle;
+use gosub_shared::node_id::NodeId;
+use gosub_shared::traits::css_system::HasCssSystem;
+use gosub_shared::traits::document::{Document, HasDocument};
+use gosub_shared::traits::node::{Node as _, NodeBuilder as _};
+use std::collections::HashMap;
 
 pub struct MyDocument<C: HasCssSystem + HasDocument> {
     pub(crate) arena: NodeArena<Node>,
@@ -55,7 +55,12 @@ impl<C: HasCssSystem> Document<C> for MyDocument<C> {
         doc
     }
 
-    fn register_node_at(&mut self, node: Self::Node, parent_id: NodeId, position: Option<usize>) -> NodeId {
+    fn register_node_at(
+        &mut self,
+        node: Self::Node,
+        parent_id: NodeId,
+        position: Option<usize>,
+    ) -> NodeId {
         let node_id = self.arena.add_node(node);
 
         // Update document

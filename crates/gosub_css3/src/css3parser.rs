@@ -1,8 +1,8 @@
-use gosub_shared::traits::css_system::CssStylesheet as _;
 use gosub_shared::traits::css_system::CssDeclaration as _;
-use gosub_shared::traits::css_system::CssRule as _;
-use gosub_shared::traits::css_system::CssValue as _;
 use gosub_shared::traits::css_system::CssParser;
+use gosub_shared::traits::css_system::CssRule as _;
+use gosub_shared::traits::css_system::CssStylesheet as _;
+use gosub_shared::traits::css_system::CssValue as _;
 use gosub_shared::traits::css_system::HasCssSystem;
 
 pub struct MyCss3Parser<C: HasCssSystem> {
@@ -12,7 +12,6 @@ pub struct MyCss3Parser<C: HasCssSystem> {
 }
 
 impl<C: HasCssSystem> CssParser<C> for MyCss3Parser<C> {
-
     fn new() -> Self {
         Self {
             parser_state: 0,
@@ -42,7 +41,7 @@ impl<C: HasCssSystem> CssParser<C> for MyCss3Parser<C> {
         rule.add_declaration(C::CssDeclaration::new(
             "color",
             C::CssValue::colorvalue("red"),
-            false
+            false,
         ));
         stylesheet.add_rule(rule);
 
@@ -53,24 +52,24 @@ impl<C: HasCssSystem> CssParser<C> for MyCss3Parser<C> {
             C::CssValue::list(vec![
                 C::CssValue::unit(1.0, "px"),
                 C::CssValue::keyword("solid"),
-                C::CssValue::colorvalue("black")
+                C::CssValue::colorvalue("black"),
             ]),
-            false
+            false,
         ));
         rule.add_declaration(C::CssDeclaration::new(
             "border-width",
             C::CssValue::unit(1.0, "px"),
-            false
+            false,
         ));
         rule.add_declaration(C::CssDeclaration::new(
             "border-style",
             C::CssValue::keyword("solid"),
-            false
+            false,
         ));
         rule.add_declaration(C::CssDeclaration::new(
             "border-color",
             C::CssValue::colorvalue("black"),
-            false
+            false,
         ));
         stylesheet.add_rule(rule);
 
@@ -78,11 +77,10 @@ impl<C: HasCssSystem> CssParser<C> for MyCss3Parser<C> {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
-    use crate::MyCssSystem;
     use super::*;
+    use crate::MyCssSystem;
 
     #[test]
     fn test_css_stylesheet() {

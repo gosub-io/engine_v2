@@ -1,8 +1,8 @@
-pub mod stylesheet;
 pub mod css3parser;
+pub mod stylesheet;
 
-use gosub_shared::traits::css_system::HasCssSystem;
 use crate::stylesheet::{CssDeclaration, CssRule, CssStylesheet, CssValue};
+use gosub_shared::traits::css_system::HasCssSystem;
 
 pub struct MyCssSystem {
     pub dummy: u32,
@@ -17,4 +17,3 @@ impl HasCssSystem for MyCssSystem {
     type CssDeclaration = CssDeclaration;
     type CssValue = CssValue;
 }
-

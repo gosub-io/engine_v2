@@ -1,6 +1,6 @@
-use std::collections::HashMap;
 use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::node::Node;
+use std::collections::HashMap;
 
 pub struct NodeArena<N: Node> {
     nodes: HashMap<NodeId, N>,
@@ -51,10 +51,10 @@ impl<N: Node> NodeArena<N> {
 
 #[cfg(test)]
 mod tests {
-    use gosub_shared::traits::node::NodeBuilder as _;
     use super::*;
     use crate::node::builder::NodeBuilder;
     use crate::node::node_impl::Node as NodeImpl;
+    use gosub_shared::traits::node::NodeBuilder as _;
 
     #[test]
     fn test_add_node() {

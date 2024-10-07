@@ -1,6 +1,6 @@
-use gosub_shared::traits::node::{CommentData, DocTypeData, ElementData, TextData, DocumentData};
 use gosub_shared::traits::node::Node;
 use gosub_shared::traits::node::NodeBuilder as NodeBuilderTrait;
+use gosub_shared::traits::node::{CommentData, DocTypeData, DocumentData, ElementData, TextData};
 
 pub struct NodeBuilder<N: Node> {
     _marker: std::marker::PhantomData<N>,
@@ -8,7 +8,8 @@ pub struct NodeBuilder<N: Node> {
 
 impl<N: Node> NodeBuilderTrait<N> for NodeBuilder<N>
 where
-    N::NodeData: From<N::ElementData> + From<N::CommentData> + From<N::TextData> + From<N::DocTypeData>
+    N::NodeData:
+        From<N::ElementData> + From<N::CommentData> + From<N::TextData> + From<N::DocTypeData>,
 {
     fn new_element_node(name: &str, namespace: &str) -> N {
         let data = N::ElementData::new(name.into(), namespace.into());

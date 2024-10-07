@@ -17,7 +17,6 @@ impl NodeId {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;

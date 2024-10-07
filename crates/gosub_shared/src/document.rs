@@ -1,12 +1,12 @@
+use crate::traits::document::Document;
+use crate::traits::document::HasDocument;
 use std::cell::{Ref, RefCell, RefMut};
 use std::rc::Rc;
-use crate::traits::document::HasDocument;
-use crate::traits::document::Document;
 
 #[derive(Debug)]
 pub struct DocumentHandle<D: HasDocument>(pub Rc<RefCell<D>>);
 
-impl <D: HasDocument> DocumentHandle<D> {
+impl<D: HasDocument> DocumentHandle<D> {
     pub fn new(document: D) -> Self {
         let handle = Self(Rc::new(RefCell::new(document)));
 
@@ -25,13 +25,13 @@ impl <D: HasDocument> DocumentHandle<D> {
     }
 }
 
-impl <D: HasDocument> Clone for DocumentHandle<D> {
+impl<D: HasDocument> Clone for DocumentHandle<D> {
     fn clone(&self) -> Self {
         Self(self.0.clone())
     }
 }
 
-impl <D: HasDocument> PartialEq for DocumentHandle<D> {
+impl<D: HasDocument> PartialEq for DocumentHandle<D> {
     fn eq(&self, other: &Self) -> bool {
         Rc::ptr_eq(&self.0, &other.0)
     }
@@ -53,7 +53,9 @@ mod tests {
 
     #[test]
     fn test_dochandle() {
-        let mock_doc = MockDocument { content: "Hello".into() };
+        let mock_doc = MockDocument {
+            content: "Hello".into(),
+        };
         let doc_handle = DocumentHandle::new(mock_doc);
 
         assert_eq!(doc_handle.get().content, "Hello");
@@ -61,12 +63,13 @@ mod tests {
         doc_handle.get_mut().content = "World".into();
         assert_eq!(doc_handle.get().content, "World");
 
-
         let cloned_handle = doc_handle.clone();
         assert_eq!(cloned_handle.get().content, "World");
         assert_eq!(doc_handle, cloned_handle);
 
-        let mock_doc = MockDocument { content: "Hello".into() };
+        let mock_doc = MockDocument {
+            content: "Hello".into(),
+        };
         let doc2_handle = DocumentHandle::new(mock_doc);
         assert_ne!(doc_handle, doc2_handle);
     }

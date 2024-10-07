@@ -1,8 +1,8 @@
+use crate::document::document::MyDocument;
 use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::css_system::HasCssSystem;
 use gosub_shared::traits::document::HasDocument;
 use gosub_shared::traits::node::{ElementData, Node as _};
-use crate::document::document::MyDocument;
 
 pub(crate) enum MutationEvents {
     RegisterNode(NodeId),

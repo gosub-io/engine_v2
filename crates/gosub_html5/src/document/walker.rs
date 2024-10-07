@@ -1,10 +1,10 @@
 use gosub_shared::document::DocumentHandle;
 use gosub_shared::traits::document::{Document, HasDocument};
-use gosub_shared::traits::node::{CommentData};
+use gosub_shared::traits::node::CommentData;
 use gosub_shared::traits::node::DocTypeData;
 use gosub_shared::traits::node::ElementData;
-use gosub_shared::traits::node::TextData;
 use gosub_shared::traits::node::Node;
+use gosub_shared::traits::node::TextData;
 use std::io::Write;
 
 pub struct DocumentWalker<C: HasDocument> {
@@ -21,11 +21,24 @@ impl<C: HasDocument> DocumentWalker<C> {
     pub fn print_tree(&self, doc_handle: DocumentHandle<C>, with_node_ids: bool) {
         let document = doc_handle.get();
         if let Some(root_node) = document.get_root_node() {
-            self.print_element(root_node, "".to_string(), true, with_node_ids, &mut std::io::stdout());
+            self.print_element(
+                root_node,
+                "".to_string(),
+                true,
+                with_node_ids,
+                &mut std::io::stdout(),
+            );
         }
     }
 
-    fn print_element(&self, node: &C::Node, prefix: String, last: bool, with_node_ids: bool, f: &mut impl Write) {
+    fn print_element(
+        &self,
+        node: &C::Node,
+        prefix: String,
+        last: bool,
+        with_node_ids: bool,
+        f: &mut impl Write,
+    ) {
         let mut buffer = prefix.clone();
         if buffer != "" {
             if last {
@@ -43,8 +56,16 @@ impl<C: HasDocument> DocumentWalker<C> {
             writeln!(f, "{}<!DOCTYPE html>", buffer).unwrap();
         }
         if let Some(data) = node.get_doctype_data() {
-            let pid = if data.public_id().is_empty() { "" } else { &format!(" PUBLIC \"{}\"", data.public_id()).to_string() };
-            let sid = if data.system_id().is_empty() { "" } else { &format!("\"{}\"", data.system_id()).to_string() };
+            let pid = if data.public_id().is_empty() {
+                ""
+            } else {
+                &format!(" PUBLIC \"{}\"", data.public_id()).to_string()
+            };
+            let sid = if data.system_id().is_empty() {
+                ""
+            } else {
+                &format!("\"{}\"", data.system_id()).to_string()
+            };
             writeln!(f, "{}<!DOCTYPE {}{}{}>", buffer, data.name(), pid, sid).unwrap();
         }
         if let Some(data) = node.get_text_data() {
@@ -57,7 +78,15 @@ impl<C: HasDocument> DocumentWalker<C> {
             writeln!(f, "{}<{}>", buffer, data.name()).unwrap();
             for (i, attr) in data.attributes().iter().enumerate() {
                 let last = i == data.attributes().len() - 1;
-                writeln!(f, "{}    {}={}{}", buffer, attr.0, attr.1, if last { "" } else { "," }).unwrap();
+                writeln!(
+                    f,
+                    "{}    {}={}{}",
+                    buffer,
+                    attr.0,
+                    attr.1,
+                    if last { "" } else { "," }
+                )
+                .unwrap();
             }
         }
 

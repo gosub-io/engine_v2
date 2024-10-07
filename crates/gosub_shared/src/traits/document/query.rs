@@ -1,7 +1,7 @@
-use anyhow::Error;
 use crate::document::DocumentHandle;
 use crate::node_id::NodeId;
 use crate::traits::document::HasDocument;
+use anyhow::Error;
 
 pub trait Condition {
     fn equals_tag(tag_name: &str) -> Self;
@@ -11,7 +11,6 @@ pub trait Condition {
     fn contains_child_tag(child_tag: &str) -> Self;
     fn has_parent_tag(parent_tag: &str) -> Self;
 }
-
 
 pub trait SearchType: PartialEq {
     fn uninitialized() -> Self;

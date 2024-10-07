@@ -9,7 +9,10 @@ pub struct ElementAttribute {
 
 impl gosub_shared::traits::node::ElementAttribute for ElementAttribute {
     fn new(name: &str, value: &str) -> Self {
-        Self { name: name.into(), value: value.into() }
+        Self {
+            name: name.into(),
+            value: value.into(),
+        }
     }
 
     fn name(&self) -> &str {
@@ -32,7 +35,7 @@ pub struct ElementData {
     name: String,
     namespace: String,
     attributes: HashMap<String, String>,
-    classes: HashMap<String, bool>,     // classname -> is active or not
+    classes: HashMap<String, bool>, // classname -> is active or not
 }
 
 impl gosub_shared::traits::node::NodeData for ElementData {}
@@ -78,7 +81,11 @@ impl gosub_shared::traits::node::ElementData for ElementData {
     }
 
     fn active_classes(&self) -> Vec<String> {
-        self.classes.iter().filter(|(_, &active)| active).map(|(name, _)| name.to_string()).collect()
+        self.classes
+            .iter()
+            .filter(|(_, &active)| active)
+            .map(|(name, _)| name.to_string())
+            .collect()
     }
 
     fn add_class(&mut self, name: &str, active: bool) {

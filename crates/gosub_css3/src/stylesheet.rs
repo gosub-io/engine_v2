@@ -1,13 +1,13 @@
+use gosub_shared::traits::css_system as css_traits;
 use std::fmt;
 use std::fmt::{Display, Formatter};
-use gosub_shared::traits::css_system as css_traits;
 
 #[derive(Debug, Clone)]
 pub enum CssValue {
     Unit(f32, String),
     Keyword(String),
     ColorValue(String),
-    List(Vec<CssValue>)
+    List(Vec<CssValue>),
 }
 
 // impl Clone for CssValue {
@@ -41,28 +41,28 @@ impl css_traits::CssValue for CssValue {
     fn is_unit(&self) -> bool {
         match self {
             CssValue::Unit(_, _) => true,
-            _ => false
+            _ => false,
         }
     }
 
     fn is_keyword(&self) -> bool {
         match self {
             CssValue::Keyword(_) => true,
-            _ => false
+            _ => false,
         }
     }
 
     fn is_color(&self) -> bool {
         match self {
             CssValue::ColorValue(_) => true,
-            _ => false
+            _ => false,
         }
     }
 
     fn is_list(&self) -> bool {
         match self {
             CssValue::List(_) => true,
-            _ => false
+            _ => false,
         }
     }
 }
@@ -100,12 +100,11 @@ impl css_traits::HasCssSystem for CssDeclaration {
 }
 
 impl css_traits::CssDeclaration for CssDeclaration {
-
     fn new(name: &str, value: Self::CssValue, important: bool) -> Self {
         Self {
             name: name.to_string(),
             value,
-            important
+            important,
         }
     }
 
@@ -125,7 +124,7 @@ impl css_traits::CssDeclaration for CssDeclaration {
 #[derive(Clone, Debug)]
 pub struct CssRule {
     selectors: Vec<String>,
-    declarations: Vec<CssDeclaration>
+    declarations: Vec<CssDeclaration>,
 }
 
 impl css_traits::HasCssSystem for CssRule {
@@ -141,7 +140,7 @@ impl css_traits::CssRule for CssRule {
     fn new() -> Self {
         Self {
             selectors: Vec::new(),
-            declarations: Vec::new()
+            declarations: Vec::new(),
         }
     }
 
@@ -164,7 +163,7 @@ impl css_traits::CssRule for CssRule {
 
 #[derive(Clone, Debug)]
 pub struct CssStylesheet {
-    rules: Vec<CssRule>
+    rules: Vec<CssRule>,
 }
 
 impl css_traits::HasCssSystem for CssStylesheet {
@@ -178,24 +177,23 @@ impl css_traits::CssStylesheet for CssStylesheet {
     // type CssRule = CssRule;
 
     fn new() -> Self {
-        Self {
-            rules: Vec::new()
-        }
+        Self { rules: Vec::new() }
     }
 
     fn add_rule(&mut self, rule: CssRule) {
         self.rules.push(rule);
     }
 
-    fn rules(&self) -> &Vec<CssRule> { &self.rules }
+    fn rules(&self) -> &Vec<CssRule> {
+        &self.rules
+    }
 }
-
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     use gosub_shared::traits::css_system::CssDeclaration as _;
     use gosub_shared::traits::css_system::CssRule as _;
-    use super::*;
 
     #[test]
     fn test_css_value_display() {
@@ -211,14 +209,15 @@ mod tests {
         let value = CssValue::List(vec![
             CssValue::Unit(1.0, "px".to_string()),
             CssValue::Keyword("solid".to_string()),
-            CssValue::ColorValue("black".to_string())
+            CssValue::ColorValue("black".to_string()),
         ]);
         assert_eq!(format!("{}", value), "1px, solid, black");
     }
 
     #[test]
     fn test_css_declaration() {
-        let declaration = CssDeclaration::new("color", CssValue::ColorValue("red".to_string()), false);
+        let declaration =
+            CssDeclaration::new("color", CssValue::ColorValue("red".to_string()), false);
         assert_eq!(declaration.name(), "color");
         assert_eq!(format!("{}", declaration.value()), "red");
         assert_eq!(declaration.important(), false);
@@ -228,7 +227,11 @@ mod tests {
     fn test_css_rule() {
         let mut rule = CssRule::new();
         rule.add_selector("body");
-        rule.add_declaration(CssDeclaration::new("color", CssValue::ColorValue("red".to_string()), false));
+        rule.add_declaration(CssDeclaration::new(
+            "color",
+            CssValue::ColorValue("red".to_string()),
+            false,
+        ));
         assert_eq!(rule.selectors(), &vec!["body".to_string()]);
         assert_eq!(rule.declarations().len(), 1);
     }

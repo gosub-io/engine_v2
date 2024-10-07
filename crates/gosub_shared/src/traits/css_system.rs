@@ -1,10 +1,25 @@
-use std::fmt::Debug;
 use crate::traits::document::HasDocument;
+use std::fmt::Debug;
 
 pub trait HasCssSystem: Sized {
-    type CssStylesheet: CssStylesheet<CssStylesheet = Self::CssStylesheet, CssRule = Self::CssRule, CssDeclaration = Self::CssDeclaration, CssValue = Self::CssValue>;
-    type CssRule: CssRule<CssStylesheet = Self::CssStylesheet, CssRule = Self::CssRule, CssDeclaration = Self::CssDeclaration, CssValue = Self::CssValue>;
-    type CssDeclaration: CssDeclaration<CssStylesheet = Self::CssStylesheet, CssRule = Self::CssRule, CssDeclaration = Self::CssDeclaration, CssValue = Self::CssValue>;
+    type CssStylesheet: CssStylesheet<
+        CssStylesheet = Self::CssStylesheet,
+        CssRule = Self::CssRule,
+        CssDeclaration = Self::CssDeclaration,
+        CssValue = Self::CssValue,
+    >;
+    type CssRule: CssRule<
+        CssStylesheet = Self::CssStylesheet,
+        CssRule = Self::CssRule,
+        CssDeclaration = Self::CssDeclaration,
+        CssValue = Self::CssValue,
+    >;
+    type CssDeclaration: CssDeclaration<
+        CssStylesheet = Self::CssStylesheet,
+        CssRule = Self::CssRule,
+        CssDeclaration = Self::CssDeclaration,
+        CssValue = Self::CssValue,
+    >;
     type CssValue: CssValue;
 }
 
@@ -16,7 +31,6 @@ pub trait CssParser<C: HasCssSystem>: Sized {
     fn new() -> Self;
     fn parse_str(&mut self, input: &str) -> C::CssStylesheet;
 }
-
 
 pub trait CssValue: Sized + Debug {
     fn unit(value: f32, unit: &str) -> Self;

@@ -1,6 +1,6 @@
+use crate::node_id::NodeId;
 use std::collections::HashMap;
 use std::fmt::Display;
-use crate::node_id::NodeId;
 
 // As long as the enum NodeData implements this trait, we don't have to specify in this shared crate
 pub trait NodeData: Sized {}
@@ -48,7 +48,11 @@ pub trait DocumentData {
 
 pub trait Node: Sized
 where
-    Self::NodeData: From<Self::ElementData> + From<Self::CommentData> + From<Self::TextData> + From<Self::DocTypeData> + From<Self::DocumentData>
+    Self::NodeData: From<Self::ElementData>
+        + From<Self::CommentData>
+        + From<Self::TextData>
+        + From<Self::DocTypeData>
+        + From<Self::DocumentData>,
 {
     type NodeData: NodeData;
     type ElementData: ElementData;

@@ -1,3 +1,3 @@
-pub mod traits;
-pub mod node_id;
 pub mod document;
+pub mod node_id;
+pub mod traits;

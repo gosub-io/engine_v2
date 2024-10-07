@@ -1,15 +1,15 @@
+use crate::node::builder::NodeBuilder;
 use gosub_shared::document::DocumentHandle;
 use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::css_system::{CssParser, HasCssParser};
-use gosub_shared::traits::document::HasDocument;
 use gosub_shared::traits::document::Document;
-use gosub_shared::traits::html5_parser::{HtmlParser};
+use gosub_shared::traits::document::HasDocument;
+use gosub_shared::traits::html5_parser::HtmlParser;
 use gosub_shared::traits::node::{ElementData, Node, NodeBuilder as _};
-use crate::node::builder::NodeBuilder;
 
 pub struct MyHtmlParser<C: HasDocument + HasCssParser> {
     doc_handle: DocumentHandle<C>,
-    parser_state: u32,  // dummy parser state
+    parser_state: u32, // dummy parser state
 }
 
 impl<C: HasDocument + HasCssParser> HtmlParser<C> for MyHtmlParser<C> {
@@ -24,17 +24,17 @@ impl<C: HasDocument + HasCssParser> HtmlParser<C> for MyHtmlParser<C> {
         self.parser_state = 1;
 
         /*
-            We generate some dummy nodes here to mimic actual parsing. Generates the following tree:
+           We generate some dummy nodes here to mimic actual parsing. Generates the following tree:
 
-            <!DOCTYPE html>
-               └─ <html>
-                  ├─ <head>
-                  └─ <body>
-                     ├─ <h1>
-                     │  └─ This is a header
-                     └─ <p>
-                        └─ hello world!
-         */
+           <!DOCTYPE html>
+              └─ <html>
+                 ├─ <head>
+                 └─ <body>
+                    ├─ <h1>
+                    │  └─ This is a header
+                    └─ <p>
+                       └─ hello world!
+        */
 
         let mut binding = self.doc_handle.get_mut();
 
@@ -61,7 +61,6 @@ impl<C: HasDocument + HasCssParser> HtmlParser<C> for MyHtmlParser<C> {
 
         let node5 = BuilderType::<C>::new_text_node("hello world!");
         let _node5_id = binding.register_node_at(node5, node4_id, None);
-
 
         // Add some attributes to the P element
         if let Some(mut node) = binding.detach_node(node4_id) {

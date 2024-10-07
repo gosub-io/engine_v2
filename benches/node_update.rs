@@ -13,11 +13,11 @@ use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::html5_parser::{HasHtmlParser, HtmlParser};
 use gosub_shared::traits::layouter::HasLayouter;
 use gosub_shared::traits::module_conf::ModuleConfiguration;
+use gosub_shared::traits::node::ElementData;
+use gosub_shared::traits::node::Node;
 use gosub_shared::traits::render_backend::HasRenderBackend;
 use gosub_shared::traits::render_tree::HasRenderTree;
 use gosub_shared::traits::tree_drawer::HasTreeDrawer;
-use gosub_shared::traits::node::Node;
-use gosub_shared::traits::node::ElementData;
 
 struct MyModuleConfiguration;
 
@@ -51,7 +51,6 @@ impl HasRenderBackend for MyModuleConfiguration {
 }
 
 impl ModuleConfiguration for MyModuleConfiguration {}
-
 
 fn bench_test_attach<C: ModuleConfiguration>(c: &mut Criterion) {
     let mut handle = DocumentBuilder::new_document("https://example.com");
@@ -123,7 +122,6 @@ fn bench_test_clone<C: ModuleConfiguration>(c: &mut Criterion) {
         })
     });
 }
-
 
 fn bta(c: &mut Criterion) {
     bench_test_attach::<MyModuleConfiguration>(c);

@@ -16,4 +16,5 @@ pub trait ModuleConfiguration:
     + HasRenderTree
     + HasTreeDrawer
     + HasRenderBackend
-{}
+{
+}

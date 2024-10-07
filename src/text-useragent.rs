@@ -1,4 +1,3 @@
-use std::thread::sleep;
 use gosub_css3::css3parser::MyCss3Parser;
 use gosub_css3::MyCssSystem;
 use gosub_html5::document::builder::DocumentBuilder;
@@ -11,16 +10,16 @@ use gosub_renderer::render_tree::render_tree::MyRenderTree;
 use gosub_renderer::tree_drawer::tree_drawer::MyTreeDrawer;
 use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::css_system::{HasCssParser, HasCssSystem};
-use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::document::query::{Condition, Query, SearchType};
+use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::html5_parser::{HasHtmlParser, HtmlParser};
 use gosub_shared::traits::layouter::{HasLayouter, Layouter};
 use gosub_shared::traits::module_conf::ModuleConfiguration;
 use gosub_shared::traits::node::{ElementData, Node};
 use gosub_shared::traits::render_backend::{HasRenderBackend, RenderBackend};
 use gosub_shared::traits::render_tree::{HasRenderTree, RenderTree};
-use gosub_shared::traits::tree_drawer::{HasTreeDrawer};
-
+use gosub_shared::traits::tree_drawer::HasTreeDrawer;
+use std::thread::sleep;
 
 struct MyModuleConfiguration;
 
@@ -56,7 +55,9 @@ impl HasRenderBackend for MyModuleConfiguration {
     type RenderBackend = MyRatatuiRenderBackend<Self>;
 }
 
-impl HasCssParser for MyModuleConfiguration { type CssParser = MyCss3Parser<Self>; }
+impl HasCssParser for MyModuleConfiguration {
+    type CssParser = MyCss3Parser<Self>;
+}
 
 impl ModuleConfiguration for MyModuleConfiguration {}
 
@@ -65,7 +66,6 @@ fn main() {
 }
 
 fn main_do_things<C: ModuleConfiguration>() {
-
     let mut handle = DocumentBuilder::new_document("https://example.com");
     let mut html_parser = C::HtmlParser::new(handle.clone());
 
@@ -103,19 +103,20 @@ fn main_do_things<C: ModuleConfiguration>() {
 
     println!("-----------------------------------------------");
     let render_tree = C::RenderTree::from_document(handle.clone());
-    let layouter = C::Layouter::from_render_tree(render_tree, Size { width: 800.0, height: 600.0 });
+    let layouter = C::Layouter::from_render_tree(
+        render_tree,
+        Size {
+            width: 800.0,
+            height: 600.0,
+        },
+    );
 
     for box_ in layouter.get_boxes() {
         println!("{}", box_);
     }
 
     println!("-----------------------------------------------");
-    let q = Query::new(
-        SearchType::find_all(),
-        vec![
-            Condition::equals_id("new-id")
-        ]
-    );
+    let q = Query::new(SearchType::find_all(), vec![Condition::equals_id("new-id")]);
     if let Ok(entries) = handle.get().query(&q) {
         for entry in entries {
             println!("{:?}", entry);

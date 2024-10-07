@@ -1,5 +1,5 @@
-use std::fmt::Display;
 use crate::traits::render_tree::HasRenderTree;
+use std::fmt::Display;
 
 pub trait Box {
     fn x(&self) -> f32;
@@ -15,7 +15,7 @@ pub trait Size {
     fn height(&self) -> f32;
 }
 
-pub trait HasLayouter: Sized  + HasRenderTree {
+pub trait HasLayouter: Sized + HasRenderTree {
     type Layouter: Layouter<Self>;
 }
 

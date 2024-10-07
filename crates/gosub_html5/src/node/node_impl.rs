@@ -1,12 +1,12 @@
-use gosub_shared::node_id::NodeId;
-use gosub_shared::traits::node::{Node as NodeTrait};
-use crate::node::node_data::NodeData;
 use crate::node::node_data::comment::CommentData;
 use crate::node::node_data::doctype::DocTypeData;
 use crate::node::node_data::document::DocumentData;
 use crate::node::node_data::element::ElementData;
 use crate::node::node_data::text::TextData;
+use crate::node::node_data::NodeData;
 use crate::node::node_impl;
+use gosub_shared::node_id::NodeId;
+use gosub_shared::traits::node::Node as NodeTrait;
 
 #[derive(Debug)]
 pub struct Node {
@@ -34,7 +34,11 @@ impl Clone for Node {
 
 impl NodeTrait for Node
 where
-    NodeData: From<node_impl::ElementData> + From<node_impl::CommentData> + From<node_impl::TextData> + From<node_impl::DocTypeData>  + From<node_impl::DocumentData>
+    NodeData: From<node_impl::ElementData>
+        + From<node_impl::CommentData>
+        + From<node_impl::TextData>
+        + From<node_impl::DocTypeData>
+        + From<node_impl::DocumentData>,
 {
     type NodeData = NodeData;
     type ElementData = ElementData;
@@ -88,10 +92,10 @@ where
                 } else {
                     self.children.insert(position, id);
                 }
-            },
+            }
             None => {
                 self.children.push(id);
-            },
+            }
         }
     }
 

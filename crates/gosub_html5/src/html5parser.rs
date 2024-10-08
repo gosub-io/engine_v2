@@ -5,7 +5,7 @@ use gosub_shared::traits::css_system::{CssParser, HasCssParser};
 use gosub_shared::traits::document::Document;
 use gosub_shared::traits::document::HasDocument;
 use gosub_shared::traits::html5_parser::HtmlParser;
-use crate::document::task_queue::{DocumentTask, DocumentTaskQueue};
+use gosub_shared::document::task_queue::{DocumentTask, DocumentTaskQueue};
 
 /// The HTML parser implementation will parse an input string (or stream reader) and generate a
 /// DOM tree based on the input. Instead of generating the tree directly, it will use the Document
@@ -132,6 +132,7 @@ impl<C: HasDocument + HasCssParser> HtmlParser<C> for MyHtmlParser<C> {
                 println!("Parse Error: {}", error);
             }
         }
+ */
 
         // We also mimic some CSS style parsing here.
         let mut parser = C::CssParser::new();

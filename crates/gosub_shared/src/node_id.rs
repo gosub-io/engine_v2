@@ -1,8 +1,6 @@
 use std::fmt;
 use std::fmt::{Display, Formatter};
 
-/// A node ID is an identifier for nodes found inside a Document. Note that by convention, node ID 0
-/// references the root of a document / tree structure.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct NodeId {
     id: u32,

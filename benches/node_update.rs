@@ -1,14 +1,15 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use gosub_css3::MyCssSystem;
+use gosub_css3::css3parser::MyCss3Parser;
+use gosub_css3::stylesheet::{CssDeclaration, CssRule, CssStylesheet, CssValue};
 use gosub_html5::document::builder::DocumentBuilder;
 use gosub_html5::document::document::MyDocument;
 use gosub_html5::html5parser::MyHtmlParser;
-use gosub_renderer::backend::MyRenderBackend;
-use gosub_renderer::layouter::MyLayouter;
-use gosub_renderer::render_tree::MyRenderTree;
-use gosub_renderer::tree_drawer::MyTreeDrawer;
+use gosub_renderer::backend::ratatui::backend::MyRatatuiRenderBackend;
+use gosub_renderer::layouter::basic_layouter::BasicLayouter;
+use gosub_renderer::render_tree::render_tree::MyRenderTree;
+use gosub_renderer::tree_drawer::tree_drawer::MyTreeDrawer;
 use gosub_shared::node_id::NodeId;
-use gosub_shared::traits::css_system::HasCssSystem;
+use gosub_shared::traits::css_system::{HasCssParser, HasCssSystem};
 use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::html5_parser::{HasHtmlParser, HtmlParser};
 use gosub_shared::traits::layouter::HasLayouter;
@@ -22,7 +23,10 @@ use gosub_shared::traits::tree_drawer::HasTreeDrawer;
 struct MyModuleConfiguration;
 
 impl HasCssSystem for MyModuleConfiguration {
-    type CssSystem = MyCssSystem;
+    type CssStylesheet = CssStylesheet;
+    type CssRule = CssRule;
+    type CssDeclaration = CssDeclaration;
+    type CssValue = CssValue;
 }
 
 impl HasDocument for MyModuleConfiguration {
@@ -35,7 +39,7 @@ impl HasHtmlParser for MyModuleConfiguration {
 }
 
 impl HasLayouter for MyModuleConfiguration {
-    type Layouter = MyLayouter<Self>;
+    type Layouter = BasicLayouter<Self>;
 }
 
 impl HasRenderTree for MyModuleConfiguration {
@@ -47,8 +51,10 @@ impl HasTreeDrawer for MyModuleConfiguration {
 }
 
 impl HasRenderBackend for MyModuleConfiguration {
-    type RenderBackend = MyRenderBackend;
+    type RenderBackend = MyRatatuiRenderBackend<Self>;
 }
+
+impl HasCssParser for MyModuleConfiguration { type CssParser = MyCss3Parser<Self>; }
 
 impl ModuleConfiguration for MyModuleConfiguration {}
 

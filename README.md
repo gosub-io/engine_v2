@@ -17,7 +17,7 @@ TODO / Test cases we need to cover:
 - [ ] let user query the DOM for nodes
 - [ ] let user query the DOM for nodes with a specific CSS selector
 - [X] allow user that adds an attribute to a (element) node automatically set the named_ids in the document.
-- [ ] allow user to retrieve info from the node from its element data (like node_id, doc_handle)
 - [X] allow user to modify node data from document element (don't know it this is needed / feasable)
 - [X] add document task queue
 - [X] Allow callers to update attributes in nodes in an efficient way
+- [ ] allow user to retrieve info from the node from its element data (like node_id, doc_handle)

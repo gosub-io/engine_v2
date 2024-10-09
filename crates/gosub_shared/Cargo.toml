@@ -18,6 +18,7 @@ encoding_rs = "0.8.34"
 derive_more = "0.99"
 
 
+
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 js-sys = "0.3.70"
 getrandom = { version = "0.2.15", features = ["js"] }
@@ -25,3 +26,4 @@ web-sys = { version = "0.3.70", features = ["Performance", "Window"] }
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.43"
+mockall = "0.13.0"

@@ -39,21 +39,12 @@ impl<C: HasDocument> PartialEq for DocumentHandle<C> {
 
 #[cfg(test)]
 mod tests {
+    use crate::mock::MockDocument;
     use super::*;
-
-    struct MockDocument {
-        content: String,
-    }
-
-    struct Mock;
-
-    impl HasDocument for Mock {
-        type Document = MockDocument;
-    }
 
     #[test]
     fn test_dochandle() {
-        let mock_doc = MockDocument {
+        let mut mock_doc = MockDocument{
             content: "Hello".into(),
         };
         let doc_handle = DocumentHandle::new(mock_doc);

@@ -47,7 +47,7 @@ mod tests {
         let mut mock_doc = MockDocument{
             content: "Hello".into(),
         };
-        let doc_handle = DocumentHandle::new(mock_doc);
+        let mut doc_handle: DocumentHandle<MockDocument> = DocumentHandle::new(mock_doc);
 
         assert_eq!(doc_handle.get().content, "Hello");
 

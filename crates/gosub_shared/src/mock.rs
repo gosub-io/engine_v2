@@ -1,12 +1,158 @@
 use std::collections::HashMap;
 use std::fmt::{Debug, Formatter};
+use anyhow::Error;
+use crate::document::DocumentHandle;
 use crate::node_id::NodeId;
 use crate::traits::css_system::{CssDeclaration, CssRule, CssValue, HasCssSystem};
-use crate::traits::document::HasDocument;
+use crate::traits::document::{Document, HasDocument};
+use crate::traits::document::query::{Condition, Query, SearchType};
 use crate::traits::node::{CommentData, DocTypeData, DocumentData, ElementData, Node, NodeData, TextData};
 
 pub struct MockDocument {
-    content: String,
+    pub content: String,
+}
+
+impl HasCssSystem for MockDocument {
+    type CssStylesheet = MockCssStylesheet;
+    type CssRule = MockCssRule;
+    type CssDeclaration = MockCssDeclaration;
+    type CssValue = MockCssValue;
+}
+
+impl HasDocument for MockDocument {
+    type Document = MockDocument;
+    type Node = MockNode;
+}
+
+pub struct MockQuery {}
+
+#[derive(Debug, PartialEq)]
+pub enum MockSearchType {}
+
+impl SearchType for MockSearchType {
+    fn uninitialized() -> Self {
+        todo!()
+    }
+
+    fn find_first() -> Self {
+        todo!()
+    }
+
+    fn find_all() -> Self {
+        todo!()
+    }
+}
+
+#[derive(Debug, PartialEq)]
+pub enum MockCondition {}
+
+impl Condition for MockCondition {
+    fn equals_tag(tag_name: &str) -> Self {
+        todo!()
+    }
+
+    fn equals_id(id: &str) -> Self {
+        todo!()
+    }
+
+    fn contains_class(class: &str) -> Self {
+        todo!()
+    }
+
+    fn contains_attribute(attribute: &str) -> Self {
+        todo!()
+    }
+
+    fn contains_child_tag(child_tag: &str) -> Self {
+        todo!()
+    }
+
+    fn has_parent_tag(parent_tag: &str) -> Self {
+        todo!()
+    }
+}
+
+impl Query for MockQuery {
+    type SearchType = MockSearchType;
+    type Condition = MockCondition;
+
+    fn new(search_type: Self::SearchType, conditions: Vec<Self::Condition>) -> Self {
+        todo!()
+    }
+
+    fn search_type(&self) -> Self::SearchType {
+        todo!()
+    }
+
+    fn conditions(&self) -> Vec<Self::Condition> {
+        todo!()
+    }
+}
+
+impl Document<Mock> for MockDocument {
+    type Node = MockNode;
+    type Query = MockQuery;
+    type Document = MockDocument;
+
+    fn new(url: &str) -> Self {
+        todo!()
+    }
+
+    fn register_node_at(&mut self, node: Self::Node, parent_id: NodeId, position: Option<usize>) -> NodeId {
+        todo!()
+    }
+
+    fn get_handle(&self) -> DocumentHandle<Mock> {
+        todo!()
+    }
+
+    fn set_handle(&mut self, handle: DocumentHandle<Mock>) {
+        todo!()
+    }
+
+    fn get_root_node(&self) -> Option<&Self::Node> {
+        todo!()
+    }
+
+    fn get_node(&self, id: NodeId) -> Option<&Self::Node> {
+        todo!()
+    }
+
+    fn stylesheets(&self) -> &Vec<MockCssStylesheet> {
+        todo!()
+    }
+
+    fn add_stylesheet(&mut self, stylesheet: MockCssStylesheet) {
+        todo!()
+    }
+
+    fn detach_node(&mut self, id: NodeId) -> Option<Self::Node> {
+        todo!()
+    }
+
+    fn update_node(&mut self, id: NodeId, node: Self::Node) {
+        todo!()
+    }
+
+    fn get_url(&self) -> &str {
+        todo!()
+    }
+
+    fn get_node_mut(&mut self, id: NodeId) -> Option<&mut Self::Node> {
+        todo!()
+    }
+
+    fn get_node_clone(&self, id: NodeId) -> Option<Self::Node> {
+        todo!()
+    }
+
+    fn get_node_by_element_id(&self, name: &str) -> Option<NodeId> {
+        todo!()
+    }
+
+    fn query(&self, query: &Self::Query) -> Result<Vec<NodeId>, Error> {
+        todo!()
+    }
 }
 
 pub struct Mock;
@@ -25,27 +171,27 @@ impl NodeData for MockNodeData {
 }
 
 impl From<MockDocumentData> for MockNodeData {
-    fn from(data: MockDocumentData) -> Self {
+    fn from(_data: MockDocumentData) -> Self {
         todo!()
     }
 }
 impl From<MockElementData> for MockNodeData {
-    fn from(data: MockElementData) -> Self {
+    fn from(_data: MockElementData) -> Self {
         todo!()
     }
 }
 impl From<MockTextData> for MockNodeData {
-    fn from(data: MockTextData) -> Self {
+    fn from(_data: MockTextData) -> Self {
         todo!()
     }
 }
 impl From<MockCommentData> for MockNodeData {
-    fn from(data: MockCommentData) -> Self {
+    fn from(_data: MockCommentData) -> Self {
         todo!()
     }
 }
 impl From<MockDocTypeData> for MockNodeData {
-    fn from(data: MockDocTypeData) -> Self {
+    fn from(_data: MockDocTypeData) -> Self {
         todo!()
     }
 }
@@ -53,7 +199,7 @@ impl From<MockDocTypeData> for MockNodeData {
 pub struct MockElementData;
 
 impl ElementData for MockElementData {
-    fn new(name: &str, namespace: &str) -> Self {
+    fn new(_name: &str, _namespace: &str) -> Self {
         todo!()
     }
 
@@ -69,11 +215,11 @@ impl ElementData for MockElementData {
         todo!()
     }
 
-    fn add_attribute(&mut self, name: &str, value: &str) {
+    fn add_attribute(&mut self, _name: &str, _value: &str) {
         todo!()
     }
 
-    fn remove_attribute(&mut self, name: &str) {
+    fn remove_attribute(&mut self, _name: &str) {
         todo!()
     }
 
@@ -85,15 +231,15 @@ impl ElementData for MockElementData {
         todo!()
     }
 
-    fn add_class(&mut self, name: &str, active: bool) {
+    fn add_class(&mut self, _name: &str, _active: bool) {
         todo!()
     }
 
-    fn remove_class(&mut self, name: &str) {
+    fn remove_class(&mut self, _name: &str) {
         todo!()
     }
 
-    fn set_class_state(&mut self, name: &str, active: bool) {
+    fn set_class_state(&mut self, _name: &str, _active: bool) {
         todo!()
     }
 }
@@ -101,7 +247,7 @@ impl ElementData for MockElementData {
 pub struct MockTextData;
 
 impl TextData for MockTextData {
-    fn new(content: &str) -> Self {
+    fn new(_content: &str) -> Self {
         todo!()
     }
 
@@ -113,7 +259,7 @@ impl TextData for MockTextData {
 pub struct MockCommentData;
 
 impl CommentData for MockCommentData {
-    fn new(content: &str) -> Self {
+    fn new(_content: &str) -> Self {
         todo!()
     }
 
@@ -125,7 +271,7 @@ impl CommentData for MockCommentData {
 pub struct MockDocTypeData;
 
 impl DocTypeData for MockDocTypeData {
-    fn new(name: &str, public_id: &str, system_id: &str) -> Self {
+    fn new(_name: &str, _public_id: &str, _system_id: &str) -> Self {
         todo!()
     }
 
@@ -158,7 +304,7 @@ impl Node for MockNode {
     type DocTypeData = MockDocTypeData;
     type DocumentData = MockDocumentData;
 
-    fn new(data: Self::NodeData) -> Self {
+    fn new(_data: Self::NodeData) -> Self {
         todo!()
     }
 
@@ -170,7 +316,7 @@ impl Node for MockNode {
         todo!()
     }
 
-    fn register(&mut self, id: NodeId) {
+    fn register(&mut self, _node_id: NodeId) {
         todo!()
     }
 
@@ -182,7 +328,7 @@ impl Node for MockNode {
         todo!()
     }
 
-    fn add_child_at_position(&mut self, id: NodeId, position: Option<usize>) {
+    fn add_child_at_position(&mut self, _node_id: NodeId, _position: Option<usize>) {
         todo!()
     }
 
@@ -223,7 +369,7 @@ impl HasCssSystem for MockCssRule {
 }
 
 impl Debug for MockCssRule {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, _f: &mut Formatter<'_>) -> std::fmt::Result {
         todo!()
     }
 }
@@ -233,11 +379,11 @@ impl CssRule for MockCssRule {
         todo!()
     }
 
-    fn add_selector(&mut self, selector: &str) {
+    fn add_selector(&mut self, _selector: &str) {
         todo!()
     }
 
-    fn add_declaration(&mut self, declaration: Self::CssDeclaration) {
+    fn add_declaration(&mut self, _declaration: Self::CssDeclaration) {
         todo!()
     }
 
@@ -260,13 +406,13 @@ impl HasCssSystem for MockCssDeclaration {
 }
 
 impl Debug for MockCssDeclaration {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, _f: &mut Formatter<'_>) -> std::fmt::Result {
         todo!()
     }
 }
 
 impl CssDeclaration for MockCssDeclaration {
-    fn new(property: &str, value: Self::CssValue, important: bool) -> Self {
+    fn new(_property: &str, _value: Self::CssValue, _important: bool) -> Self {
         todo!()
     }
 
@@ -286,25 +432,25 @@ impl CssDeclaration for MockCssDeclaration {
 pub struct MockCssValue;
 
 impl Debug for MockCssValue {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, _f: &mut Formatter<'_>) -> std::fmt::Result {
         todo!()
     }
 }
 
 impl CssValue for MockCssValue {
-    fn unit(value: f32, unit: &str) -> Self {
+    fn unit(_value: f32, _unit: &str) -> Self {
         todo!()
     }
 
-    fn keyword(value: &str) -> Self {
+    fn keyword(_value: &str) -> Self {
         todo!()
     }
 
-    fn colorvalue(value: &str) -> Self {
+    fn colorvalue(_value: &str) -> Self {
         todo!()
     }
 
-    fn list(args: Vec<Self>) -> Self {
+    fn list(_args: Vec<Self>) -> Self {
         todo!()
     }
 
@@ -333,7 +479,7 @@ impl HasCssSystem for MockCssStylesheet {
 }
 
 impl Debug for MockCssStylesheet {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, _f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         todo!()
     }
 }
@@ -343,7 +489,7 @@ impl crate::traits::css_system::CssStylesheet for MockCssStylesheet {
         MockCssStylesheet
     }
 
-    fn add_rule(&mut self, rule: MockCssRule) {
+    fn add_rule(&mut self, _rule: MockCssRule) {
         todo!()
     }
 

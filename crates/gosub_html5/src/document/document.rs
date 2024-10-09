@@ -21,11 +21,6 @@ pub struct MyDocument<C: HasCssSystem + HasDocument> {
     _marker: std::marker::PhantomData<C>,
 }
 
-// impl<C: HasDocument> HasDocument for MyDocument<C> {
-//     type Document = MyDocument<C>;
-//     type Node = Node;
-// }
-
 impl<C: HasCssSystem + HasDocument> HasCssSystem for MyDocument<C> {
     type CssStylesheet = C::CssStylesheet;
     type CssRule = C::CssRule;

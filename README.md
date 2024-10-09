@@ -19,5 +19,5 @@ TODO / Test cases we need to cover:
 - [X] allow user that adds an attribute to a (element) node automatically set the named_ids in the document.
 - [ ] allow user to retrieve info from the node from its element data (like node_id, doc_handle)
 - [X] allow user to modify node data from document element (don't know it this is needed / feasable)
-- [ ] add document task queue (optional for now)
+- [X] add document task queue
 - [X] Allow callers to update attributes in nodes in an efficient way

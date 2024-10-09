@@ -4,3 +4,4 @@ mod document_events;
 pub mod query_processor;
 pub mod tree_iterator;
 pub mod walker;
+mod task_queue;

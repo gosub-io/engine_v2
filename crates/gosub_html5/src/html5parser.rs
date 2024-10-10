@@ -6,6 +6,7 @@ use gosub_shared::traits::document::Document;
 use gosub_shared::traits::document::HasDocument;
 use gosub_shared::traits::html5_parser::HtmlParser;
 use gosub_shared::traits::node::{ElementData, Node, NodeBuilder as _};
+use crate::document::task_queue::{DocumentTask, DocumentTaskQueue};
 
 pub struct MyHtmlParser<C: HasDocument + HasCssParser> {
     doc_handle: DocumentHandle<C>,
@@ -37,6 +38,54 @@ impl<C: HasDocument + HasCssParser> HtmlParser<C> for MyHtmlParser<C> {
         */
 
         let mut binding = self.doc_handle.get_mut();
+
+
+        let mut task_queue = DocumentTaskQueue::new(self.doc_handle.clone());
+
+        let tid_1 = task_queue.add_task(DocumentTask::CreateElement {
+            name: "html".to_string(),
+            namespace: "html".to_string(),
+            parent_id: NodeId::root(),
+            position: None,
+            location: Default::default(),
+        }, None, None);
+
+        let tid_2 = task_queue.add_task(DocumentTask::CreateElement {
+            name: "head".to_string(),
+            namespace: "html".to_string(),
+            location: Default::default(),
+        }, tid_1, None);
+
+        let tid_3 = task_queue.add_task(DocumentTask::CreateElement {
+            name: "body".to_string(),
+            namespace: "html".to_string(),
+            location: Default::default(),
+        }, tid_1, None);
+
+        let tid_41 = task_queue.add_task(DocumentTask::CreateElement {
+            name: "h1".to_string(),
+            namespace: "html".to_string(),
+            location: Default::default(),
+        }, tid_3, None);
+
+        let tid_42 = task_queue.add_task(DocumentTask::CreateText {
+            content: "This is a header".to_string(),
+            location: Default::default(),
+        }, tid_41, None);
+
+        let tid_4 = task_queue.add_task(DocumentTask::CreateElement {
+            name: "p".to_string(),
+            namespace: "html".to_string(),
+            location: Default::default(),
+        }, tid_3, None);
+
+        let tid_5 = task_queue.add_task(DocumentTask::CreateText {
+            content: "hello world!".to_string(),
+            location: Default::default(),
+        }, tid_4, None);
+
+        task_queue.flush();
+
 
         #[allow(type_alias_bounds)]
         type BuilderType<C: HasDocument> = NodeBuilder<C::Node>;

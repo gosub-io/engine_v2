@@ -1,6 +1,15 @@
+use std::fmt;
+use std::fmt::{Display, Formatter};
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct NodeId {
     id: u32,
+}
+
+impl Display for NodeId {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "NodeId({})", self.id)
+    }
 }
 
 impl NodeId {
@@ -42,5 +51,11 @@ mod tests {
         // Has copy, so it can be copied without clone
         let id3 = id2;
         assert_eq!(id3, id2);
+    }
+
+    #[test]
+    fn test_display() {
+        let id = NodeId::new(42);
+        assert_eq!(format!("{}", id), "NodeId(42)");
     }
 }

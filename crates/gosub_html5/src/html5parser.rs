@@ -1,12 +1,10 @@
-use crate::node::builder::NodeBuilder;
 use gosub_shared::document::DocumentHandle;
-use gosub_shared::node_id::NodeId;
+use gosub_shared::location::Location;
 use gosub_shared::traits::css_system::{CssParser, HasCssParser};
 use gosub_shared::traits::document::Document;
 use gosub_shared::traits::document::HasDocument;
 use gosub_shared::traits::html5_parser::HtmlParser;
-use gosub_shared::traits::node::{ElementData, Node, NodeBuilder as _};
-use crate::document::task_queue::{DocumentTask, DocumentTaskQueue};
+use crate::document::task_queue::{DocumentTask, DocumentTaskQueue, TaskDestination};
 
 pub struct MyHtmlParser<C: HasDocument + HasCssParser> {
     doc_handle: DocumentHandle<C>,
@@ -37,56 +35,74 @@ impl<C: HasDocument + HasCssParser> HtmlParser<C> for MyHtmlParser<C> {
                        └─ hello world!
         */
 
-        let mut binding = self.doc_handle.get_mut();
-
-
         let mut task_queue = DocumentTaskQueue::new(self.doc_handle.clone());
+
+        let mut binding = self.doc_handle.get_mut();
 
         let tid_1 = task_queue.add_task(DocumentTask::CreateElement {
             name: "html".to_string(),
             namespace: "html".to_string(),
-            parent_id: NodeId::root(),
-            position: None,
-            location: Default::default(),
-        }, None, None);
+            location: Location::default(),
+        }, TaskDestination::DocumentRoot(None));
 
-        let tid_2 = task_queue.add_task(DocumentTask::CreateElement {
+        let _ = task_queue.add_task(DocumentTask::CreateElement {
             name: "head".to_string(),
             namespace: "html".to_string(),
             location: Default::default(),
-        }, tid_1, None);
+        }, TaskDestination::Task(tid_1, None));
 
         let tid_3 = task_queue.add_task(DocumentTask::CreateElement {
             name: "body".to_string(),
             namespace: "html".to_string(),
             location: Default::default(),
-        }, tid_1, None);
+        }, TaskDestination::Task(tid_1, None));
 
         let tid_41 = task_queue.add_task(DocumentTask::CreateElement {
             name: "h1".to_string(),
             namespace: "html".to_string(),
             location: Default::default(),
-        }, tid_3, None);
+        }, TaskDestination::Task(tid_3, None));
 
-        let tid_42 = task_queue.add_task(DocumentTask::CreateText {
+        let _ = task_queue.add_task(DocumentTask::CreateText {
             content: "This is a header".to_string(),
             location: Default::default(),
-        }, tid_41, None);
+        }, TaskDestination::Task(tid_41, None));
 
         let tid_4 = task_queue.add_task(DocumentTask::CreateElement {
             name: "p".to_string(),
             namespace: "html".to_string(),
             location: Default::default(),
-        }, tid_3, None);
+        }, TaskDestination::Task(tid_3, None));
 
-        let tid_5 = task_queue.add_task(DocumentTask::CreateText {
+        let _ = task_queue.add_task(DocumentTask::CreateText {
             content: "hello world!".to_string(),
             location: Default::default(),
-        }, tid_4, None);
+        }, TaskDestination::Task(tid_4, None));
+
+        let _ = task_queue.add_task(DocumentTask::CreateText {
+            content: "prefix".to_string(),
+            location: Default::default(),
+        }, TaskDestination::Task(tid_4, Some(0)));
+
+        let _ = task_queue.add_task(DocumentTask::InsertAttribute {
+            key: "class".to_string(),
+            value: "a b c".to_string(),
+            location: Default::default(),
+        }, TaskDestination::Task(tid_3, None));
+        let _ = task_queue.add_task(DocumentTask::InsertAttribute {
+            key: "id".to_string(),
+            value: "myid".to_string(),
+            location: Default::default(),
+        }, TaskDestination::Task(tid_3, None));
+        let _ = task_queue.add_task(DocumentTask::InsertAttribute {
+            key: "foo".to_string(),
+            value: "bar".to_string(),
+            location: Default::default(),
+        }, TaskDestination::Task(tid_3, None));
 
         task_queue.flush();
 
-
+/*
         #[allow(type_alias_bounds)]
         type BuilderType<C: HasDocument> = NodeBuilder<C::Node>;
 
@@ -123,6 +139,7 @@ impl<C: HasDocument + HasCssParser> HtmlParser<C> for MyHtmlParser<C> {
             // Finally, reattach the node back into the document/arena
             binding.update_node(node4_id, node);
         }
+ */
 
         // We also mimic some CSS style parsing here..
         let mut parser = C::CssParser::new();

@@ -37,8 +37,6 @@ impl<C: HasDocument + HasCssParser> HtmlParser<C> for MyHtmlParser<C> {
 
         let mut task_queue = DocumentTaskQueue::new(self.doc_handle.clone());
 
-        let mut binding = self.doc_handle.get_mut();
-
         let tid_1 = task_queue.add_task(DocumentTask::CreateElement {
             name: "html".to_string(),
             namespace: "html".to_string(),
@@ -100,7 +98,12 @@ impl<C: HasDocument + HasCssParser> HtmlParser<C> for MyHtmlParser<C> {
             location: Default::default(),
         }, TaskDestination::Task(tid_3, None));
 
-        task_queue.flush();
+        let errors = task_queue.flush();
+        if !errors.is_empty() {
+            for error in errors {
+                println!("Parse Error: {}", error);
+            }
+        }
 
 /*
         #[allow(type_alias_bounds)]
@@ -144,6 +147,7 @@ impl<C: HasDocument + HasCssParser> HtmlParser<C> for MyHtmlParser<C> {
         // We also mimic some CSS style parsing here..
         let mut parser = C::CssParser::new();
         let stylesheet = parser.parse_str("h1 { color: red; }");
+        let mut binding = self.doc_handle.get_mut();
         binding.add_stylesheet(stylesheet);
     }
 }

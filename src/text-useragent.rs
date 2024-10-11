@@ -16,10 +16,9 @@ use gosub_shared::traits::html5_parser::{HasHtmlParser, HtmlParser};
 use gosub_shared::traits::layouter::{HasLayouter, Layouter};
 use gosub_shared::traits::module_conf::ModuleConfiguration;
 use gosub_shared::traits::node::{ElementData, Node};
-use gosub_shared::traits::render_backend::{HasRenderBackend, RenderBackend};
+use gosub_shared::traits::render_backend::{HasRenderBackend};
 use gosub_shared::traits::render_tree::{HasRenderTree, RenderTree};
 use gosub_shared::traits::tree_drawer::HasTreeDrawer;
-use std::thread::sleep;
 
 struct MyModuleConfiguration;
 
@@ -117,18 +116,19 @@ fn main_do_things<C: ModuleConfiguration>() {
 
     println!("-----------------------------------------------");
     let q = Query::new(SearchType::find_all(), vec![Condition::equals_id("new-id")]);
-    if let Ok(entries) = handle.get().query(&q) {
+    let binding = handle.get();
+    if let Ok(entries) = binding.query(&q) {
         for entry in entries {
-            println!("{:?}", entry);
+            println!("Query for new-id found: {:?}", entry);
         }
     } else {
         println!("Query failed");
     }
 
-    println!("-----------------------------------------------");
-    let mut render_backend = C::RenderBackend::from_layouter(layouter);
-    loop {
-        render_backend.render_scene();
-        sleep(std::time::Duration::from_millis(1000));
-    }
+    // println!("-----------------------------------------------");
+    // let mut render_backend = C::RenderBackend::from_layouter(layouter);
+    // loop {
+    //     render_backend.render_scene();
+    //     sleep(std::time::Duration::from_millis(1000));
+    // }
 }

@@ -15,17 +15,24 @@ impl<N: Node> NodeArena<N> {
         }
     }
 
-    pub fn add_node(&mut self, mut node: N) -> NodeId {
+    pub fn next_node_id(&mut self) -> NodeId {
         let id = NodeId::new(self.next_node_id);
         self.next_node_id += 1;
 
-        // we mutate ID here
-        node.register(id);
-
-        // But we "move" node into the self.nodes.. so node is not an owner anymore. Does this work with mut?
-        self.nodes.insert(id, node);
-
         id
+    }
+
+    pub fn add_node(&mut self, mut node: N) -> NodeId {
+        let node_id = if node.id().is_some() {
+            node.id().unwrap()
+        } else {
+            self.next_node_id()
+        };
+
+        node.register(node_id);
+        self.nodes.insert(node_id, node);
+
+        node_id
     }
 
     pub fn update_node(&mut self, node_id: NodeId, node: N) {

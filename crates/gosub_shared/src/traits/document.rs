@@ -25,6 +25,8 @@ pub trait Document<C: HasCssSystem + HasDocument>: Sized {
         position: Option<usize>,
     ) -> NodeId;
 
+    fn get_next_node_id(&mut self) -> NodeId;
+
     fn get_handle(&self) -> DocumentHandle<C>;
     fn set_handle(&mut self, handle: DocumentHandle<C>);
 

@@ -61,9 +61,8 @@ impl<C: HasCssSystem + HasDocument> Document<C> for MyDocument<C> {
         parent_id: NodeId,
         position: Option<usize>,
     ) -> NodeId {
+        // Add the node to the arena
         let node_id = self.arena.add_node(node);
-
-        // Update document
         self.mutate_document(MutationEvents::RegisterNode(node_id));
 
         // Update the parent node to make sure the node-id is added to the parent
@@ -72,6 +71,10 @@ impl<C: HasCssSystem + HasDocument> Document<C> for MyDocument<C> {
         self.arena.update_node(parent_id, parent_node);
 
         node_id
+    }
+
+    fn get_next_node_id(&mut self) -> NodeId {
+        self.arena.next_node_id()
     }
 
     fn get_handle(&self) -> DocumentHandle<C> {

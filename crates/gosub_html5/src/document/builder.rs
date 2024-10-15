@@ -1,6 +1,9 @@
 use gosub_shared::document::DocumentHandle;
 use gosub_shared::traits::document::{Document, HasDocument};
 
+/// This struct can be used to create new documents. It should be used in favor of building
+/// documents directly.
+
 pub struct DocumentBuilder<C: HasDocument> {
     _phantom: std::marker::PhantomData<C>,
 }

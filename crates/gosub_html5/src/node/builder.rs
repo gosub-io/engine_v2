@@ -2,6 +2,7 @@ use gosub_shared::traits::node::Node;
 use gosub_shared::traits::node::NodeBuilder as NodeBuilderTrait;
 use gosub_shared::traits::node::{CommentData, DocTypeData, DocumentData, ElementData, TextData};
 
+/// Simple structure that can create new nodes of a specific type.
 pub struct NodeBuilder<N: Node> {
     _marker: std::marker::PhantomData<N>,
 }

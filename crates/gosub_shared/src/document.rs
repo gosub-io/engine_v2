@@ -7,6 +7,11 @@ use std::rc::Rc;
 pub struct DocumentHandle<C: HasDocument>(pub Rc<RefCell<C::Document>>);
 
 impl<C: HasDocument> DocumentHandle<C> {
+    /// Creates a new document handle based on the given document. The document itself can be
+    /// referenced hereafter with the `get` or `get_mut()` methods. Note that the document handle
+    /// is also stored within the document, in case of functionality within the document that
+    /// relies on calling other functionality with a document-handle (for instance,
+    /// the `QueryProcessor` in `query()`).
     pub fn new(document: C::Document) -> Self {
         let handle = Self(Rc::new(RefCell::new(document)));
 
@@ -16,10 +21,12 @@ impl<C: HasDocument> DocumentHandle<C> {
         handle
     }
 
+    /// Returns a reference to the document.
     pub fn get(&self) -> Ref<'_, C::Document> {
         self.0.borrow()
     }
 
+    /// Returns a mutable reference to the document.
     pub fn get_mut(&mut self) -> RefMut<'_, C::Document> {
         RefCell::borrow_mut(&self.0)
     }

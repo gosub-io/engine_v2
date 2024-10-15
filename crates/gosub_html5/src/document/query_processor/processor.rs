@@ -5,6 +5,9 @@ use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::document::query::{Query, SearchType};
 use gosub_shared::traits::document::HasDocument;
 
+/// The query processor is a simple implementation that can be used to query a document for
+/// specific set of nodes.
+
 pub struct QueryProcessor<C: HasDocument, Q: Query> {
     handle: DocumentHandle<C>,
     _marker: std::marker::PhantomData<Q>,

@@ -65,6 +65,7 @@ impl gosub_shared::traits::node::ElementData for ElementData {
     fn add_attribute(&mut self, name: &str, value: &str) {
         self.attributes.insert(name.into(), value.into());
 
+        /// When we add a "class" attribute, we actually store it in the classes map as well.
         if name == "class" {
             for class in value.split_whitespace() {
                 self.classes.insert(class.to_string(), true);
@@ -74,12 +75,17 @@ impl gosub_shared::traits::node::ElementData for ElementData {
 
     fn remove_attribute(&mut self, name: &str) {
         self.attributes.remove(name);
+
+        if name == "class" {
+            self.classes.clear();
+        }
     }
 
     fn classes(&self) -> &HashMap<String, bool> {
         &self.classes
     }
 
+    /// Return all classes for this element node that are marked as active
     fn active_classes(&self) -> Vec<String> {
         self.classes
             .iter()

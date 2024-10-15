@@ -1,3 +1,7 @@
+# Architecture
+
+This is a rough draft on how the system looks like from a high level perspective.
+
 ```mermaid
 ---
 title: Gosub Engine V2

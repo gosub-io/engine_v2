@@ -5,6 +5,9 @@ use ratatui::layout::Rect;
 use ratatui::widgets::{Block, Borders};
 use ratatui::DefaultTerminal;
 
+/// This is an example backend that uses the `ratatui` crate to render the layout. It gets the box
+/// layout from the layouter, and will generate boxes onto the screen based on the layout.
+
 pub struct MyRatatuiRenderBackend<C: HasLayouter> {
     terminal: DefaultTerminal,
     layout: C::Layouter,

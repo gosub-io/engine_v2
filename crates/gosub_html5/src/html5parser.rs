@@ -7,6 +7,11 @@ use gosub_shared::traits::document::HasDocument;
 use gosub_shared::traits::html5_parser::HtmlParser;
 use crate::document::task_queue::{DocumentTask, DocumentTaskQueue};
 
+/// The HTML parser implementation will parse an input string (or stream reader) and generate a
+/// DOM tree based on the input. Instead of generating the tree directly, it will use the Document
+/// Task Queue to store tasks that will be executed during a flush of the queue. This will basically
+/// defer the actual creation until a later time.
+
 pub struct MyHtmlParser<C: HasDocument + HasCssParser> {
     doc_handle: DocumentHandle<C>,
     parser_state: u32, // dummy parser state

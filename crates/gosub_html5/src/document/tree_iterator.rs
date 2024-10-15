@@ -3,6 +3,8 @@ use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::node::Node;
 
+/// This tree iterator can iterate over all nodes in a document tree in a depth-first manner.
+
 pub struct TreeIterator<C: HasDocument> {
     stack: Vec<NodeId>,
     handle: DocumentHandle<C>,

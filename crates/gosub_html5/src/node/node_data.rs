@@ -10,12 +10,18 @@ pub mod document;
 pub mod element;
 pub mod text;
 
+/// A node can contain any of these data structures internally.
 #[derive(Debug, Clone)]
 pub enum NodeData {
+    // Node is an element node (e.g. <div>).
     Element(ElementData),
+    // Node is a text node (e.g. "Hello world").
     Text(TextData),
+    // Node is a comment node (e.g. <!-- comment -->).
     Comment(CommentData),
+    // Node is a doctype node (e.g. <!DOCTYPE html>).
     DocType(DocTypeData),
+    // Node is a document node (e.g. the root of a document).
     Document(DocumentData),
 }
 

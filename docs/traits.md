@@ -1,10 +1,10 @@
 The engine consists of a lot of different traits that are used to define the behavior of the engine. This allows us to create a more modular design where we can easily swap out implementations of certain parts of the engine. It also allows us to fix issues that can arise when certain crates depend on each other.
 
-A trait is usually accompanied with generics. This allows us to define the behavior of the trait in a more flexible way. For instance, the `Document` trait is defined as follows:
+A trait is usually accompanied by generics. This allows us to define the behavior of the trait in a more flexible way. For instance, the `Document` trait is defined as follows:
 
 ## ModuleConfiguration
 
-The main configuration of the engine is done through the ModuleConfiguration trait. As a user agent, you will define the behavior of the engine by implementing this trait. The trait is defined as follows:
+The main configuration of the engine is done through the `ModuleConfiguration` trait. As a user agent, you will define the behavior of the engine by implementing this trait. The trait is defined as follows:
 
 ```rust 
 pub trait ModuleConfiguration:
@@ -20,7 +20,7 @@ pub trait ModuleConfiguration:
 {}
 ```
 
-This tells us that the ModuleConfiguration is a placeholder for all kind of other systems, like a Cssparser, A Layouter, A RenderBackend, A CssSystem etc. All of these can be easily swapped out for other implementations when needed. 
+This tells us that the `ModuleConfiguration` is a placeholder for all kind of other systems, like a Cssparser, A Layouter, A RenderBackend, A CssSystem etc. All of these can be easily swapped out for other implementations when needed. 
 
 For instance, it would be fairly trivial to swap a graphical rendering backend for a text-based rendering backend. Or to swap the CSS parser for a different implementation. This allows us to create a more flexible engine that can be easily extended.
 
@@ -126,5 +126,6 @@ fn main_do_things<C: ModuleConfiguration>() {
     // with the document as defined in the module configuration.
     let walker = DocumentWalker::new(handle.clone());
     walker.print_tree(handle.clone(), true);
+}
 
 ```

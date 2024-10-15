@@ -4,6 +4,8 @@ use gosub_shared::traits::css_system::HasCssSystem;
 use gosub_shared::traits::document::HasDocument;
 use gosub_shared::traits::node::{ElementData, Node as _};
 
+/// An event can occur when a mutation happens in the document. This allows us to keep track of
+/// changes that happen in the document.
 pub(crate) enum MutationEvents {
     RegisterNode(NodeId),
     UpdateNode(NodeId),
@@ -25,6 +27,7 @@ impl<C: HasCssSystem + HasDocument> MyDocument<C> {
         }
     }
 
+    /// Will check if the node is an element node and sets the id of the element as a named element.
     fn add_named_element(&mut self, node_id: NodeId) {
         let Some(node) = self.arena.get_node(node_id) else {
             return;
@@ -41,6 +44,7 @@ impl<C: HasCssSystem + HasDocument> MyDocument<C> {
         }
     }
 
+    /// Removes a named element from the list of named elements.
     fn remove_named_element(&mut self, node_id: NodeId) {
         let Some(node) = self.arena.get_node(node_id) else {
             return;

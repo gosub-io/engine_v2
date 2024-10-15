@@ -12,19 +12,19 @@ use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::node::{Node as _, NodeBuilder as _};
 use std::collections::HashMap;
 
+
+/// The document is a simple implementation of a document tree. It contains a tree of nodes, and
+/// accompanied stylesheets that may have been discovered during parsing and creation of the
+/// document. All nodes are stored inside a node arena.
 pub struct MyDocument<C: HasCssSystem + HasDocument> {
     pub(crate) arena: NodeArena<Node>,
     url: String,
     handle: Option<DocumentHandle<C>>,
     stylesheets: Vec<C::CssStylesheet>,
+    /// List of named element that can be used to quickly find an element by its ID.
     pub(crate) named_elements: HashMap<String, NodeId>,
     _marker: std::marker::PhantomData<C>,
 }
-
-// impl<C: HasDocument> HasDocument for MyDocument<C> {
-//     type Document = MyDocument<C>;
-//     type Node = Node;
-// }
 
 impl<C: HasCssSystem + HasDocument> HasCssSystem for MyDocument<C> {
     type CssStylesheet = C::CssStylesheet;

@@ -2,6 +2,8 @@ use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::node::Node;
 use std::collections::HashMap;
 
+/// The node arena is used by our Document implementation to store nodes. This way we can easily
+/// reference nodes by their ID, and we can also easily detach nodes from the arena if needed.
 pub struct NodeArena<N: Node> {
     nodes: HashMap<NodeId, N>,
     next_node_id: u32,
@@ -23,6 +25,8 @@ impl<N: Node> NodeArena<N> {
     }
 
     pub fn add_node(&mut self, mut node: N) -> NodeId {
+        /// If a node is already registered, we should use that node-id instead of generating a new
+        /// one.
         let node_id = if node.id().is_some() {
             node.id().unwrap()
         } else {

@@ -8,15 +8,24 @@ use crate::node::node_impl;
 use gosub_shared::node_id::NodeId;
 use gosub_shared::traits::node::Node as NodeTrait;
 
+/// The Node struct represents a single node in the DOM tree. It contains a reference to the parent
+/// node, a list of children, and the actual data of the node. A node itself does not contain any
+/// knowledge of its actual document or storage method, it is just a simple data structure.
 #[derive(Debug)]
 pub struct Node {
+    /// The unique identifier of this node. This is used to reference the node in the document. It
+    /// can be `None` when a node is not yet registered in a document.
     id: Option<NodeId>,
 
+    /// List of children (in order) of this node.
     children: Vec<NodeId>,
+    /// Optional parent node of this node. This is `None` for the root node.
     parent: Option<NodeId>,
 
+    /// True when the node is registered into a document.
     is_registered: bool,
 
+    /// Actual node data, based on the type of the node
     data: NodeData,
 }
 
@@ -106,6 +115,8 @@ where
         }
     }
 
+    /// Retrieves the element data of the node in case the node is an element node. If not, it will
+    /// return `None`.
     fn get_element_data(&self) -> Option<&Self::ElementData> {
         match self.data {
             NodeData::Element(ref data) => Some(data),

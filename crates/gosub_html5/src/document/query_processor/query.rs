@@ -1,3 +1,4 @@
+/// A query has a condition, ie. a predicate that can be used to filter nodes.
 #[derive(Debug, PartialEq, Clone)]
 pub enum Condition {
     EqualsTag(String),
@@ -9,35 +10,45 @@ pub enum Condition {
 }
 
 impl gosub_shared::traits::document::query::Condition for Condition {
+    /// Nodes should be element nodes that equal this name (ie: div, span, etc)
     fn equals_tag(tag_name: &str) -> Self {
         Condition::EqualsTag(tag_name.to_owned())
     }
 
+    /// Nodes should have an ID that equals this value
     fn equals_id(id: &str) -> Self {
         Condition::EqualsId(id.to_owned())
     }
 
+    /// Nodes should have this class
     fn contains_class(class: &str) -> Self {
         Condition::ContainsClass(class.to_owned())
     }
 
+    /// Nodes should have this attribute
     fn contains_attribute(attribute: &str) -> Self {
         Condition::ContainsAttribute(attribute.to_owned())
     }
 
+    /// Nodes should have a child with this tag
     fn contains_child_tag(child_tag: &str) -> Self {
         Condition::ContainsChildTag(child_tag.to_owned())
     }
 
+    /// Nodes should have a parent with this tag
     fn has_parent_tag(parent_tag: &str) -> Self {
         Condition::HasParentTag(parent_tag.to_owned())
     }
 }
 
+/// Type of result that is expected from the query
 #[derive(Debug, PartialEq, Clone)]
 pub enum SearchType {
+    /// Uninitialized search type
     Uninitialized,
+    /// Find the first node that matches the query
     FindFirst,
+    /// Find all nodes that match the query
     FindAll,
 }
 

@@ -7,6 +7,8 @@ use gosub_shared::traits::node::Node;
 use gosub_shared::traits::node::TextData;
 use std::io::Write;
 
+/// This struct can be used to walk through a document and print the tree structure of the document.
+
 pub struct DocumentWalker<C: HasDocument> {
     pub doc_handle: DocumentHandle<C>,
 }

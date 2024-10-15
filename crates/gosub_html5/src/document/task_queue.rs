@@ -5,9 +5,14 @@ use gosub_shared::traits::document::{Document, HasDocument};
 use gosub_shared::traits::node::{ElementData, Node, NodeBuilder as _};
 use crate::node::builder::NodeBuilder;
 
+/// The Document Task Queue is used to queue up tasks that need to be executed on the document. This
+/// can be used to defer tasks to a later stage.
+
 /// Actual task that needs to be completed on flush
 #[derive(Clone, Debug)]
 pub struct Task {
+    /// Node ID that this task is related to. It's either the node-id reserved when creating a node
+    /// or an existing node-id when inserting an attribute.
     pub node_id: NodeId,
     pub task: DocumentTask,
 }

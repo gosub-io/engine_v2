@@ -10,17 +10,6 @@ pub enum CssValue {
     List(Vec<CssValue>),
 }
 
-// impl Clone for CssValue {
-//     fn clone(&self) -> Self {
-//         match self {
-//             CssValue::Unit(value, unit) => CssValue::Unit(*value, unit.clone()),
-//             CssValue::Keyword(value) => CssValue::Keyword(value.clone()),
-//             CssValue::ColorValue(value) => CssValue::ColorValue(value.clone()),
-//             CssValue::List(args) => CssValue::List(args.clone())
-//         }
-//     }
-// }
-
 impl css_traits::CssValue for CssValue {
     fn unit(value: f32, unit: &str) -> Self {
         Self::Unit(value, unit.into())

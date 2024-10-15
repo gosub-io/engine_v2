@@ -1,3 +1,5 @@
+/// A location defines a particular offset in a source code document by line-number and offset on
+/// that line. It's primary use is to provide a location for errors and warnings.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Location {
     line: usize,

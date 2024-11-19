@@ -137,3 +137,8 @@ impl<C: HasCssSystem + HasDocument> Document<C> for MyDocument<C> {
         qp.query(query)
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+}

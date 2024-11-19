@@ -1,12 +1,3 @@
-# Trait diagrams
-
-This document contains the trait diagrams for the engine. The traits are grouped by their functionality and how they 
-are linked to each other. These traits form the boundaries of the engine and are used to separate the different 
-components.
-
-In other words, it should be possible to implement a different system for Nodes without changing anything else and it 
-would still function correctly. The same goes for the CSS system, the query system, and the rendering system.
-
 ```mermaid
 ---
 title: Gosub Engine Traits

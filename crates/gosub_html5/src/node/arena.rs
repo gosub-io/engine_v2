@@ -25,8 +25,8 @@ impl<N: Node> NodeArena<N> {
     }
 
     pub fn add_node(&mut self, mut node: N) -> NodeId {
-        /// If a node is already registered, we should use that node-id instead of generating a new
-        /// one.
+        // If a node is already registered, we should use that node-id instead of generating a new
+        // one.
         let node_id = if node.id().is_some() {
             node.id().unwrap()
         } else {

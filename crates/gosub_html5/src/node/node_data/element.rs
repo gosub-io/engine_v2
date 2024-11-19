@@ -65,7 +65,7 @@ impl gosub_shared::traits::node::ElementData for ElementData {
     fn add_attribute(&mut self, name: &str, value: &str) {
         self.attributes.insert(name.into(), value.into());
 
-        /// When we add a "class" attribute, we actually store it in the classes map as well.
+        // When we add a "class" attribute, we actually store it in the classes map as well.
         if name == "class" {
             for class in value.split_whitespace() {
                 self.classes.insert(class.to_string(), true);

@@ -465,6 +465,10 @@ impl<C: HasDocument> Document<C> for MockDocument<C> {
         todo!()
     }
 
+    fn get_next_node_id(&mut self) -> NodeId {
+        todo!()
+    }
+
     fn get_handle(&self) -> DocumentHandle<C> {
         self.handle.clone().unwrap()
     }

@@ -12,5 +12,5 @@ log = "0.4.22"
 simple_logger = "5.0.0"
 anyhow = { version = "1.0.89", features = [] }
 colors-transform = "0.2.11"
-rand = "0.8.5"
+rand = "0.9.3"
 itertools = "0.13.0"
